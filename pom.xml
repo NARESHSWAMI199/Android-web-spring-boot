@@ -64,8 +64,23 @@
 			<optional>true</optional>
 		</dependency>
 
+		<!--Use  both for modelgen specifications-->
+		<dependency>
+			<groupId>org.hibernate.orm</groupId>
+			<artifactId>hibernate-jpamodelgen</artifactId>
+			<version>6.1.7.Final</version>
+		</dependency>
 
-<!--		<dependency>-->
+		<dependency>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+
+		<!-- end Use for modelgen specifications-->
+
+
+		<!--		<dependency>-->
 <!--			<groupId>org.springframework.boot</groupId>-->
 <!--			<artifactId>spring-boot-starter-tomcat</artifactId>-->
 <!--			<scope>provided</scope>-->
@@ -93,10 +108,20 @@
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
 						</exclude>
+						<exclude>
+						<outputDirectory>${project.build.directory}/generated-sources/java/jpametamodel</outputDirectory>
+						<processors>
+							<processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
+						</processors>
+						<overwrite>true</overwrite>
+						</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
+
+
 		</plugins>
+
 	</build>
 
 </project>

@@ -10,13 +10,14 @@ import lombok.Setter;
 
 public class SearchFilters {
 
+    String searchKey="";
     String storeName;
     String username;
     String city;
     String state;
     String areaCode;
-    String sortBy = "id";
-    String sort = "dsc";
+    String sortBy = "createdAt";
+    String sort = "desc";
     Integer pageSize = 10;
     Integer pageNumber =0;
 

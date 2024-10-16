@@ -7,10 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import sales.application.sales.dto.SearchFilters;
-import sales.application.sales.repostories.ItemRepository;
-import sales.application.sales.repostories.StoreHbRepository;
-import sales.application.sales.repostories.StoreRepository;
-import sales.application.sales.repostories.UserRepository;
+import sales.application.sales.repostories.*;
 
 
 @Service
@@ -27,6 +24,9 @@ public class CommonRepository{
 
     @Autowired
     StoreHbRepository storeHbRepository;
+
+    @Autowired
+    protected UserHbRepository userHbRepository;
 
 
 

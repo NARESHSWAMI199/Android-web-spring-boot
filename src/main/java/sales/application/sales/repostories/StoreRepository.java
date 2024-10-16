@@ -7,13 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import sales.application.sales.dto.StoreDto;
-import sales.application.sales.entities.Item;
 import sales.application.sales.entities.Store;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Repository
 public interface StoreRepository extends JpaRepository<Store,Long>, JpaSpecificationExecutor<Store> {
@@ -38,8 +34,8 @@ public interface StoreRepository extends JpaRepository<Store,Long>, JpaSpecifica
         "from store s left join user u on u.user_id = s.user_id  " +
             "left join address a on a.id = s.address " +
             "left join city c on c.id= a.city " +
-            "left join state st on st.id = c.state_id  where s.is_deleted != 'Y'",nativeQuery = true)
-public Page<Map<String, Object>> findAllStore(Pageable pageable);
+            "left join state st on st.id = c.state_id  where s.is_deleted != 'Y' and s.name=:searchKey ",nativeQuery = true)
+    Page<Map<String, Object>> findAllStore(Pageable pageable, String searchKey);
 
 
 

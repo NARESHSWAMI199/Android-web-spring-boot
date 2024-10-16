@@ -17,7 +17,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "item")
-@Where(clause = "is_deleted != 'y'")
+@Where(clause = "is_deleted != 'Y' and  status !='D' ")
 public class Item implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,9 +55,9 @@ public class Item implements Serializable {
     String slug;
     @Column(name = "in_stock")
     String inStock;
-    @ManyToOne
-    @JoinColumn(name = "wholesale_id")
-    Store wholesale;
+
+    @Column(name = "wholesale_id")
+    Integer wholesaleId;
 
 
 }
