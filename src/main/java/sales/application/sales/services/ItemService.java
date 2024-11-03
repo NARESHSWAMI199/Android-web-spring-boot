@@ -49,13 +49,13 @@ public class ItemService extends CommonRepository {
 
 
 
-    public List<ItemCategory> getAllStoreCategories(SearchFilters searchFilters) {
+    public List<ItemCategory> getAllItemsCategories(SearchFilters searchFilters) {
         Sort sort = Sort.by(searchFilters.getOrderBy());
         sort = searchFilters.getOrder().equals("asc") ? sort.ascending():sort.descending() ;
         return itemCategoryRepository.findAll(sort);
     }
 
-    public List<ItemSubCategory> getAllStoreSubCategories(SearchFilters searchFilters) {
+    public List<ItemSubCategory> getAllItemsSubCategories(SearchFilters searchFilters) {
         Sort sort = Sort.by(searchFilters.getOrderBy());
         sort = searchFilters.getOrder().equals("asc") ? sort.ascending():sort.descending() ;
         Pageable pageable = getPageable(searchFilters);

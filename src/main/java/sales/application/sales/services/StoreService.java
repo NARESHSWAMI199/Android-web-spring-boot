@@ -60,4 +60,10 @@ public class StoreService extends CommonRepository {
     }
 
 
+
+    public StoreSubCategory getStoreSubcategoryDetail(Integer subcategoryId) {
+        return storeSubCategoryRepository.findById(subcategoryId).get();
+    }
+
+
 }

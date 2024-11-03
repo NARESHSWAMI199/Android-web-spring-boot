@@ -50,14 +50,14 @@ public class ItemController extends CommonService {
 
     @PostMapping("/categories")
     public ResponseEntity<List<ItemCategory>> getAllCategory(@RequestBody SearchFilters searchFilters) {
-        List<ItemCategory> categories = itemService.getAllStoreCategories(searchFilters);
+        List<ItemCategory> categories = itemService.getAllItemsCategories(searchFilters);
         return new ResponseEntity<>(categories, HttpStatus.valueOf(200));
     }
 
 
     @PostMapping("subcategory")
-    public ResponseEntity<List<ItemSubCategory>> getStoreSubCategory(@RequestBody SearchFilters searchFilters) {
-        List<ItemSubCategory> storeSubCategories = itemService.getAllStoreSubCategories(searchFilters);
+    public ResponseEntity<List<ItemSubCategory>> getItemsSubCategory(@RequestBody SearchFilters searchFilters) {
+        List<ItemSubCategory> storeSubCategories = itemService.getAllItemsSubCategories(searchFilters);
         return new ResponseEntity<>(storeSubCategories, HttpStatus.OK);
     }
 

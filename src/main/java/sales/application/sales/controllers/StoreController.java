@@ -62,6 +62,13 @@ public class StoreController extends CommonService {
         return new ResponseEntity<>(storeSubCategories, HttpStatus.OK);
     }
 
+    @GetMapping("subcategory/{subcategoryId}")
+    public ResponseEntity<StoreSubCategory> getStoreSubCategory(@PathVariable(required = true) Integer subcategoryId) {
+        StoreSubCategory storeSubCategory = storeService.getStoreSubcategoryDetail(subcategoryId);
+        return new ResponseEntity<>(storeSubCategory, HttpStatus.OK);
+    }
+
+
 
 
 
