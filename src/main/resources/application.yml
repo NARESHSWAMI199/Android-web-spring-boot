@@ -50,3 +50,11 @@ item:
   relative:
   #  get : src/main/resources/images/store/
   get: src/main/resources/images/items/
+
+
+store:
+  absolute: /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/images/stores/
+  #    absolute  : /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/images/store/
+  relative:
+  #  get : src/main/resources/images/store/
+  get: src/main/resources/images/stores/

@@ -20,8 +20,10 @@ public class Address {
     int id;
     @Column(name = "slug")
     String slug;
-    @Column(name = "city")
-    Integer city;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "city", referencedColumnName = "id")
+    City city;
     @Column(name="state")
     Integer state;
     @Column(name="latitude")

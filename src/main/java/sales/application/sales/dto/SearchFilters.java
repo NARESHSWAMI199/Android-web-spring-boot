@@ -16,10 +16,11 @@ public class SearchFilters {
     String city;
     String state;
     String areaCode;
-    String sortBy = "createdAt";
-    String sort = "desc";
+    String orderBy = "id";
+    String order = "desc";
     Integer pageSize = 10;
     Integer pageNumber =0;
-
+    Integer categoryId;
+    Integer subcategoryId;
 
 }

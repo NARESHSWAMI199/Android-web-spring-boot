@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import sales.application.sales.dto.SearchFilters;
+import sales.application.sales.entities.ItemCategory;
+import sales.application.sales.entities.ItemSubCategory;
 import sales.application.sales.repostories.*;
 
 
@@ -27,11 +29,22 @@ public class CommonRepository{
 
     @Autowired
     protected UserHbRepository userHbRepository;
+    @Autowired
+    protected ItemSubCategoryRepository itemSubCategoryRepository;
 
+    @Autowired
+    protected ItemCategoryRepository itemCategoryRepository;
+
+    @Autowired
+    protected StoreCategoryRepository storeCategoryRepository;
+
+    @Autowired
+    protected StoreSubCategoryRepository storeSubCategoryRepository;
 
 
     public Pageable getPageable(SearchFilters searchFilters) {
-        Sort sort =  searchFilters.getSort().equalsIgnoreCase("asc")  ?  Sort.by(searchFilters.getSortBy()).ascending() :Sort.by(searchFilters.getSortBy()).descending();
+        Sort sort = Sort.by(searchFilters.getOrderBy());
+        sort = searchFilters.getOrder().equalsIgnoreCase("asc")  ? sort.ascending():sort.descending();
         return PageRequest.of(searchFilters.getPageNumber(),searchFilters.getPageSize(),sort);
     }
 

@@ -2,11 +2,14 @@ package sales.application.sales.services;
 
 
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import sales.application.sales.dto.UserDto;
+import sales.application.sales.entities.ItemCategory;
 import sales.application.sales.entities.User;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -36,6 +39,13 @@ public class UserService  extends CommonRepository{
     @Transactional
     public int updateUser(UserDto userDto, User loggedUser) {
         return userHbRepository.updateUser(userDto, loggedUser);
+    }
+
+
+
+    public List<ItemCategory> getAllItemCategories() {
+        Sort sort =  Sort.by("id").descending();
+        return itemCategoryRepository.findAll(sort);
     }
 
 

@@ -17,4 +17,14 @@ public class ItemSpecifications {
         if(storeId == null) return null;
         return (root, query, builder) -> builder.equal(root.get(Item_.WHOLESALE_ID), storeId);
     }
+
+    public static Specification<Item> isCategory(Integer categoryId ){
+        if(categoryId == null || categoryId.equals(-1)) return null;
+        return (root, query, builder) -> builder.equal(root.get(Item_.CATEGORY), categoryId);
+    }
+
+    public static Specification<Item> isSubcategory(Integer subcategoryId ){
+        if(subcategoryId == null || subcategoryId.equals(-1)) return null;
+        return (root, query, builder) -> builder.equal(root.get(Item_.SUBCATEGORY), subcategoryId);
+    }
 }

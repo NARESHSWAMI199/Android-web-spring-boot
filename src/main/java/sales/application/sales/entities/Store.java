@@ -12,15 +12,15 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
 import org.springframework.context.annotation.Lazy;
-
-@Table(name = "store")
 @Entity
+@Table(name = "store")
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Where(clause = "is_deleted != 'Y'")
-@JsonInclude(JsonInclude.Include.ALWAYS)
+@Where(clause = "is_deleted != 'Y' and status != 'D'")
+//@JsonInclude(JsonInclude.Include.ALWAYS)
 public class Store {
 
     @Id
@@ -38,8 +38,15 @@ public class Store {
     String avatar;
 
 
-    @Lazy
-    @OneToOne(fetch = FetchType.LAZY)
+    @Column(name = "category")
+    Integer category;
+
+    @Column(name = "subcategory")
+    Integer subcategory;
+
+
+
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "address",nullable = true)
     Address address;
 
@@ -73,8 +80,8 @@ public class Store {
     @Column(name = "updated_by")
     Integer updatedBy;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id",nullable = true)
-    User user;
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id",nullable = true)
+//    User user;
 
 }
