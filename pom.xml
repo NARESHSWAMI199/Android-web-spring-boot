@@ -108,13 +108,12 @@
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
 						</exclude>
-						<exclude>
-						<outputDirectory>${project.build.directory}/generated-sources/java/jpametamodel</outputDirectory>
-						<processors>
-							<processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
-						</processors>
-						<overwrite>true</overwrite>
-						</exclude>
+<!--						<exclude>-->
+<!--						<processors>-->
+<!--							<processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>-->
+<!--						</processors>-->
+<!--						<overwrite>true</overwrite>-->
+<!--						</exclude>-->
 					</excludes>
 				</configuration>
 			</plugin>

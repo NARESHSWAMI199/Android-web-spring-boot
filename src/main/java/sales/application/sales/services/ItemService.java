@@ -56,8 +56,6 @@ public class ItemService extends CommonRepository {
     }
 
     public List<ItemSubCategory> getAllItemsSubCategories(SearchFilters searchFilters) {
-        Sort sort = Sort.by(searchFilters.getOrderBy());
-        sort = searchFilters.getOrder().equals("asc") ? sort.ascending():sort.descending() ;
         Pageable pageable = getPageable(searchFilters);
         if(searchFilters.getCategoryId() != null){
             return itemSubCategoryRepository.getSubCategories(searchFilters.getCategoryId(),pageable);
