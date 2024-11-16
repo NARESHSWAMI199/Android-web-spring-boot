@@ -1,11 +1,16 @@
 package sales.application.sales.entities;
 
 import jakarta.persistence.*;
+import jdk.jshell.execution.Util;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
+import sales.application.sales.dto.ItemCommentsDto;
+import sales.application.sales.utilities.Utils;
+
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -23,10 +28,7 @@ public class ItemComments {
     Integer itemId;
 
     @Column(name = "slug")
-    String slug;
-
-    @Column(name = "store_id")
-    Integer storeId;
+    String slug = UUID.randomUUID().toString();
 
     @Column(name = "user_id")
     Integer userId;
@@ -38,15 +40,24 @@ public class ItemComments {
     String message;
 
     @Column(name = "created_at")
-    String createdAt;
+    Long createdAt;
 
     @Column(name="is_deleted")
-    String isDeleted;
+    String isDeleted ="N";
 
     @Column(name = "updated_at")
-    String updatedAt;
+    Long updatedAt;
 
     @Transient
     Integer repliesCount;
+
+
+
+    public ItemComments (User loggedUser) {
+        this.createdAt = Utils.getCurrentMillis();
+        this.updatedAt = Utils.getCurrentMillis();
+        this.userId = loggedUser.getId();
+    }
+
 
 }

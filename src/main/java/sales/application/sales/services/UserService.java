@@ -34,6 +34,10 @@ public class UserService  extends CommonRepository{
         return responseObj;
     }
 
+    public User findByEmailAndPassword(UserDto userDto) {
+        return userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword());
+    }
+
 
 
     @Transactional

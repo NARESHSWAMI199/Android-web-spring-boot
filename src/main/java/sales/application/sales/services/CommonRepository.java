@@ -41,6 +41,12 @@ public class CommonRepository{
     @Autowired
     protected StoreSubCategoryRepository storeSubCategoryRepository;
 
+    @Autowired
+    ItemCommentRepository itemCommentRepository;
+
+    @Autowired
+    ItemCommentHbRepository itemCommentHbRepository;
+
 
     public Pageable getPageable(SearchFilters searchFilters) {
         Sort sort = Sort.by(searchFilters.getOrderBy());

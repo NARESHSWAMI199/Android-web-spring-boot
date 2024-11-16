@@ -34,6 +34,9 @@ public class ItemSubCategory {
     @Column(name = "icon")
     String icon;
 
+    @Column(name = "unit")
+    String unit;
+
     @Column(name = "updated_at")
     Long updatedAt;
 

@@ -3,6 +3,7 @@ package sales.application.sales.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import sales.application.sales.services.ItemCommentService;
 import sales.application.sales.services.ItemService;
 import sales.application.sales.services.StoreService;
 import sales.application.sales.services.UserService;
@@ -23,5 +24,8 @@ public class CommonService {
 
     @Autowired
     Logger logger;
+
+    @Autowired
+    ItemCommentService itemCommentService;
 
 }

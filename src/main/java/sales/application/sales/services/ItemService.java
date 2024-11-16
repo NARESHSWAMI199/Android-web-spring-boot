@@ -28,10 +28,13 @@ public class ItemService extends CommonRepository {
 
     public Page<Item> getAllItem(ItemDto searchFilters) {
         Specification<Item> specification = Specification.where(
-                containsName(searchFilters.getSearchKey().trim())
+                (containsName(searchFilters.getSearchKey().trim())
+                        .or(isCategoryName(searchFilters.getSearchKey().trim()))
+                        .or(isSubcategoryName(searchFilters.getSearchKey().trim())))
                         .and(isWholesaleId(searchFilters.getStoreId()))
                         .and(isCategory(searchFilters.getCategoryId()))
                         .and(isSubcategory(searchFilters.getSubcategoryId()))
+
         );
         Pageable pageable = getPageable(searchFilters);
         return itemRepository.findAll(specification,pageable);
