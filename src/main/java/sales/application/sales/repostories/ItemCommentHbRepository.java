@@ -1,15 +1,16 @@
 package sales.application.sales.repostories;
 
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import sales.application.sales.dto.ItemCommentsDto;
 import sales.application.sales.utilities.Utils;
 
 @Component
+@Transactional
 public class ItemCommentHbRepository {
 
     @Autowired

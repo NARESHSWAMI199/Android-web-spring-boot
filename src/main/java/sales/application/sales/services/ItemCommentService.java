@@ -1,5 +1,6 @@
 package sales.application.sales.services;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -33,24 +34,26 @@ public class ItemCommentService extends  CommonRepository {
     }
 
 
+    @Transactional
     public Map<String,Object> addOrUpdateComment(ItemCommentsDto itemCommentsDto , User loggedUser) {
         Map<String,Object> responseObj = new HashMap<>();
         if(!Utils.isEmpty(itemCommentsDto.getCommentSlug())){
-            ItemComments itemComments = new ItemComments(loggedUser);
-            itemComments.setItemId(itemComments.getItemId());
-            itemComments.setMessage(itemComments.getMessage());
-            itemComments.setParentId(itemComments.getParentId());
-            itemComments = itemCommentRepository.save(itemComments);
-            if(itemComments.getId() > 0){
-                responseObj.put("message","Comment successfully saved.");
-                responseObj.put("status",200);
-                return responseObj;
-            }
-        }else{
             int isUpdated = itemCommentHbRepository.updateComment(itemCommentsDto);
             if(isUpdated > 0){
                 responseObj.put("message","Comment successfully updated.");
                 responseObj.put("status",201);
+                return responseObj;
+            }
+
+        }else{
+            ItemComments itemComments = new ItemComments(loggedUser);
+            itemComments.setItemId(itemCommentsDto.getItemId());
+            itemComments.setMessage(itemCommentsDto.getMessage());
+            itemComments.setParentId(itemCommentsDto.getParentId());
+            itemComments = itemCommentRepository.save(itemComments);
+            if(itemComments.getId() > 0){
+                responseObj.put("message","Comment successfully saved.");
+                responseObj.put("status",200);
                 return responseObj;
             }
         }

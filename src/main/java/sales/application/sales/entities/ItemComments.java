@@ -24,22 +24,22 @@ public class ItemComments {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-    @Column(name = "item_id")
+    @Column(name = "item_id",nullable = false)
     Integer itemId;
 
-    @Column(name = "slug")
+    @Column(name = "slug",nullable = false)
     String slug = UUID.randomUUID().toString();
 
-    @Column(name = "user_id")
+    @Column(name = "user_id",nullable = false)
     Integer userId;
 
-    @Column(name = "parent_id")
+    @Column(name = "parent_id",nullable = false)
     Integer parentId;
 
-    @Column(name = "message")
+    @Column(name = "message",nullable = false)
     String message;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at",nullable = false)
     Long createdAt;
 
     @Column(name="is_deleted")

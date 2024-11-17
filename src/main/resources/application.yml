@@ -57,6 +57,16 @@ jwt:
   secret : saleispower
 
 
+
+
+profile :
+  #  absolute : C:/Users/DATA/Documents/sales/sales-backend/src/main/resources/public/
+  absolute  : /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/images/profiles/
+  relative :
+  #  get : src/main/resources/public/
+  get : src/main/resources/images/profiles/
+
+
 item:
   absolute: /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/images/items/
   #    absolute  : /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/images/store/

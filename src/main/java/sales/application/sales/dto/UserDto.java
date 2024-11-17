@@ -20,6 +20,5 @@ public class UserDto {
     private String slug;
     private MultipartFile profileImage;
     Integer userId;
-    List<Integer> groupList;
 }
 

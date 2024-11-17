@@ -32,4 +32,14 @@ public class UserHbRepository {
         query.setParameter("slug", userDto.getSlug());
         return query.executeUpdate();
     }
+
+
+    public int updateProfileImage(String slug, String avatarPath){
+        String hql = "Update User set avatar=:avatar where slug=:slug";
+        Query query = entityManager.createQuery(hql);
+        query.setParameter("avatar",avatarPath);
+        query.setParameter("slug",slug);
+        return query.executeUpdate();
+    }
+
 }

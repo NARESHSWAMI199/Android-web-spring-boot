@@ -27,7 +27,8 @@ public class SalesWebMvcConfigurer implements WebMvcConfigurer {
                 "/swagger-ui/**",
                 "/v3/api-docs/**",
                 "/api-docs/**",
-                "/auth/login"
+                "/auth/login",
+                "/auth/register"
         };
         registry.addInterceptor(new SalesInterceptor(jwtToken,userRepository))
                 .excludePathPatterns(excludedPaths);
