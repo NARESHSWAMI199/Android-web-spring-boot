@@ -13,10 +13,7 @@ import sales.application.sales.utilities.Utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserService  extends CommonRepository{
@@ -99,14 +96,16 @@ public class UserService  extends CommonRepository{
     }
 
     @Transactional
-    public int updateProfileImage(MultipartFile profileImage, String slug, User loggedUser) throws IOException {
-        User user = userRepository.findUserBySlug(slug);
-        if (!Utils.isValidImage(profileImage.getOriginalFilename())) return 0;
+    public String  updateProfileImage(MultipartFile profileImage, String slug) throws IOException {
+        String imageName = Objects.requireNonNull(profileImage.getOriginalFilename()).replaceAll(" ","_");
+        if (!Utils.isValidImage(imageName)) return null;
         String dirPath = profilePath+slug+"/";
         File dir = new File(dirPath);
         if(!dir.exists()) dir.mkdirs();
-        profileImage.transferTo(new File(dirPath+profileImage.getOriginalFilename()));
-        return  userHbRepository.updateProfileImage(slug,profileImage.getOriginalFilename());
+        profileImage.transferTo(new File(dirPath+imageName));
+        int isUpdated =  userHbRepository.updateProfileImage(slug,imageName);
+        if(isUpdated > 0) return imageName;
+        return null;
     }
 
 
