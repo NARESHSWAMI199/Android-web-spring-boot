@@ -28,7 +28,9 @@ public class SalesWebMvcConfigurer implements WebMvcConfigurer {
                 "/v3/api-docs/**",
                 "/api-docs/**",
                 "/auth/login",
-                "/auth/register"
+                "/auth/register",
+                "/comments/all",
+                "/auth/profile/**"
         };
         registry.addInterceptor(new SalesInterceptor(jwtToken,userRepository))
                 .excludePathPatterns(excludedPaths);

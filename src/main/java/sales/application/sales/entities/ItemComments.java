@@ -30,8 +30,9 @@ public class ItemComments {
     @Column(name = "slug",nullable = false)
     String slug = UUID.randomUUID().toString();
 
-    @Column(name = "user_id",nullable = false)
-    Integer userId;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    User user;
 
     @Column(name = "parent_id",nullable = false)
     Integer parentId;
@@ -56,7 +57,7 @@ public class ItemComments {
     public ItemComments (User loggedUser) {
         this.createdAt = Utils.getCurrentMillis();
         this.updatedAt = Utils.getCurrentMillis();
-        this.userId = loggedUser.getId();
+        this.user.setId(loggedUser.getId());
     }
 
 

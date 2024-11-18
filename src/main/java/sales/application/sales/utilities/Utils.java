@@ -1,6 +1,6 @@
 package sales.application.sales.utilities;
 
-import sales.application.sales.exeptions.MyException;
+import sales.application.sales.exceptions.MyException;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;

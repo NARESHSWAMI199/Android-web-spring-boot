@@ -1,4 +1,4 @@
-package sales.application.sales.exeptions;
+package sales.application.sales.exceptions;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

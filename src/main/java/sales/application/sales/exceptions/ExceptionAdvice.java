@@ -1,4 +1,4 @@
-package sales.application.sales.exeptions;
+package sales.application.sales.exceptions;
 
 import jakarta.transaction.Transactional;
 import org.hibernate.ObjectNotFoundException;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import sales.application.sales.dto.ErrorDto;
 
+import java.io.FileNotFoundException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 @RestControllerAdvice
@@ -38,7 +39,7 @@ public class ExceptionAdvice {
         @Transactional
         @ExceptionHandler(value = {NullPointerException.class})
         @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-        public ErrorDto resourceNotFoundException(NullPointerException ex, WebRequest request) {
+        public ErrorDto nullPointerException(NullPointerException ex, WebRequest request) {
             ErrorDto message = new ErrorDto("Something went wrong there is a null pointer exception.",500);
             ex.printStackTrace();
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -67,7 +68,17 @@ public class ExceptionAdvice {
             return message;
         }
 
-        @Transactional
+
+        @ExceptionHandler(value = {FileNotFoundException.class})
+        @ResponseStatus(value = HttpStatus.NO_CONTENT)
+        public ErrorDto fileNotFound(FileNotFoundException ex, WebRequest webRequest){
+            ErrorDto message = new ErrorDto("File not found.",400);
+            ex.printStackTrace();
+            return message;
+        }
+
+
+    @Transactional
         @ExceptionHandler(value = {Exception.class})
         @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
         public ErrorDto resourceNotFoundException(Exception ex, WebRequest request) {
@@ -76,6 +87,9 @@ public class ExceptionAdvice {
             ex.printStackTrace();
             return message;
         }
+
+
+
 
     }
 
