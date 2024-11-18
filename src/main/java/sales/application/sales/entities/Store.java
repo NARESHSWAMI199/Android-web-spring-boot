@@ -1,6 +1,7 @@
 package sales.application.sales.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
@@ -38,11 +39,13 @@ public class Store {
     String avatar;
 
 
-    @Column(name = "category")
-    Integer category;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category", referencedColumnName = "id")
+    StoreCategory storeCategory;
 
-    @Column(name = "subcategory")
-    Integer subcategory;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "subcategory", referencedColumnName = "id")
+    StoreSubCategory storeSubCategory;
 
 
 
@@ -65,6 +68,7 @@ public class Store {
     @Column(name = "status")
     String status;
 
+    @JsonIgnore
     @Column(name = "is_deleted")
     String isDeleted;
 
@@ -80,8 +84,5 @@ public class Store {
     @Column(name = "updated_by")
     Integer updatedBy;
 
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id",nullable = true)
-//    User user;
 
 }

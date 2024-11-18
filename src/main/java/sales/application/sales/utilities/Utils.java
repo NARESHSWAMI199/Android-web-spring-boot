@@ -82,6 +82,27 @@ public class Utils {
             if (Utils.isEmpty(contact) || !contact.matches(Utils.mobileRegex)) throw new MyException(errorMessage.replaceAll("_","mobile number") +  " ["+contact+"]") ;
             if (Utils.isEmpty(email) || !isValidEmail(email)) throw new MyException(errorMessage.replaceAll("_","email address") + " ["+email+"]") ;
         }
+
+
+
+
+
+    public static String isValidName(final String name) throws MyException {
+        String NAME_PATTERN = "^[a-zA-Z](?=.{1,100}$)[A-Za-z_& ]*(?:\\h+[A-Z][A-Za-z]*)*$";
+        Pattern pattern = Pattern.compile(NAME_PATTERN);
+        Matcher matcher = pattern.matcher(name);
+        System.out.println(matcher.matches());
+        if(!matcher.matches()){
+            String message ="";
+            String neededSyntax = "First latter should be in upper case (optional), " +
+                    "and not a number and special symbols like : ^*$+?[]()| are not allowed.";
+                message = "Not a valid username";
+                System.out.println(message);
+                throw  new MyException(message + " "+neededSyntax  );
+            }
+        return name;
+    }
+
 }
 
 

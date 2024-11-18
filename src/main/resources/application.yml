@@ -3,7 +3,9 @@
 server:
   port: 8082
 
-
+springdoc:
+  api-docs:
+    path : /api-docs
 
 spring:
   datasource:
@@ -28,6 +30,11 @@ spring:
     converters:
       preferred-json-mapper: gson
       #    management.endpoints.web.base-path =  /actuator
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
 #    management.endpoints.web.exposure.include =  health,info,prometheus,metrics
 #    management.endpoint.health.show-details =  always
 #    management.endpoint.metrics.enabled =  true
@@ -44,22 +51,26 @@ spring:
 #    spring.servlet.multipart.max-file-size=1000MB
 
 
-#item:
-##  absolute: /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/images/items/
-#  absolute  : /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/images/store/
-#  relative:
-#  get : src/main/resources/images/store/
-##  get: src/main/resources/images/items/
-#
-#
-#store:
-##  absolute: /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/images/stores/
-#   absolute  : /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/images/store/
-#   relative:
-#   get : src/main/resources/images/store/
-##  get: src/main/resources/images/stores/
-#
+jwt:
+  secret : saleispower
 
+
+
+
+profile :
+  #  absolute : C:/Users/DATA/Documents/sales/sales-backend/src/main/resources/public/
+  absolute  : /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/images/profiles/
+  relative :
+  #  get : src/main/resources/public/
+  get : src/main/resources/images/profiles/
+
+
+item:
+  absolute: /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/images/items/
+  #    absolute  : /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/images/store/
+  relative:
+  #  get : src/main/resources/images/store/
+  get: src/main/resources/images/items/
 
 
 profile :

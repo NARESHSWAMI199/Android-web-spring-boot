@@ -5,11 +5,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ItemCommentsFilterDto extends SearchFilters{
+public class ItemCommentsDto extends SearchFilters{
     String message;
     Integer userId;
     String userSlug;
     String itemSlug;
+    String commentSlug;
     int itemId;
     int parentId = 0;
 }

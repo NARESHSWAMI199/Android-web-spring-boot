@@ -18,14 +18,14 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
+
 public class WebSecurityConfig  {
 
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/**");
+        return (web) -> web.ignoring().requestMatchers("/swagger-ui/**", " /v3/api-docs/**", "/api-docs/**","/**");
     }
-
 
 
     @Bean

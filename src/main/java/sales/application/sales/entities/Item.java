@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.Where;
 
 import java.io.Serializable;
@@ -35,16 +36,21 @@ public class Item implements Serializable {
     @Column(name = "discount")
     float discount;
 
-    @Column(name = "category")
-    Integer category;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category", referencedColumnName = "id")
+    ItemCategory itemCategory;
 
-    @Column(name = "subcategory")
-    Integer subcategory;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "subcategory" , referencedColumnName = "id")
+    ItemSubCategory itemSubCategory;
+
+    @Column(name = "capacity")
+    Float capacity;
 
     @Column(name = "description")
     String description;
     @Column(name = "avatar")
-    String avatar;
+    String avatars;
     @Column(name = "rating")
     float rating;
     @JsonIgnore
@@ -67,6 +73,7 @@ public class Item implements Serializable {
     Integer updatedBy;
     @Column(name = "slug")
     String slug;
+
     @Column(name = "in_stock")
     String inStock;
 

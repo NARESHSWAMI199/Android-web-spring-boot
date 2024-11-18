@@ -1,11 +1,16 @@
 package sales.application.sales.entities;
 
 import jakarta.persistence.*;
+import jdk.jshell.execution.Util;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
+import sales.application.sales.dto.ItemCommentsDto;
+import sales.application.sales.utilities.Utils;
+
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -19,34 +24,40 @@ public class ItemComments {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-    @Column(name = "item_id")
+    @Column(name = "item_id",nullable = false)
     Integer itemId;
 
-    @Column(name = "slug")
-    String slug;
+    @Column(name = "slug",nullable = false)
+    String slug = UUID.randomUUID().toString();
 
-    @Column(name = "store_id")
-    Integer storeId;
-
-    @Column(name = "user_id")
+    @Column(name = "user_id",nullable = false)
     Integer userId;
 
-    @Column(name = "parent_id")
+    @Column(name = "parent_id",nullable = false)
     Integer parentId;
 
-    @Column(name = "message")
+    @Column(name = "message",nullable = false)
     String message;
 
-    @Column(name = "created_at")
-    String createdAt;
+    @Column(name = "created_at",nullable = false)
+    Long createdAt;
 
     @Column(name="is_deleted")
-    String isDeleted;
+    String isDeleted ="N";
 
     @Column(name = "updated_at")
-    String updatedAt;
+    Long updatedAt;
 
     @Transient
     Integer repliesCount;
+
+
+
+    public ItemComments (User loggedUser) {
+        this.createdAt = Utils.getCurrentMillis();
+        this.updatedAt = Utils.getCurrentMillis();
+        this.userId = loggedUser.getId();
+    }
+
 
 }
