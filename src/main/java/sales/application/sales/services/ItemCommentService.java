@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import sales.application.sales.dto.ItemCommentsDto;
-import sales.application.sales.entities.ItemComments;
+import sales.application.sales.entities.ItemComment;
 import sales.application.sales.entities.User;
 import sales.application.sales.utilities.Utils;
 
@@ -19,18 +19,23 @@ import java.util.Map;
 @Service
 public class ItemCommentService extends  CommonRepository {
 
-    public List<ItemComments> getALlItemComment(ItemCommentsDto filters) {
-        Specification<ItemComments> specification = Specification.where(
+    public List<ItemComment> getALlItemComment(ItemCommentsDto filters) {
+        Specification<ItemComment> specification = Specification.where(
                 (containsName(filters.getSearchKey()))
                         .and(hasSlug(filters.getCommentSlug()))
                         .and(isItemId(filters.getItemId()))
                         .and(isParentComment(filters.getParentId()))
         );
         Pageable pageable = getPageable(filters);
-        Page<ItemComments> itemComments = itemCommentRepository.findAll(specification,pageable);
-        List<ItemComments> content = itemComments.getContent();
-        for(ItemComments comment : content) comment.setRepliesCount(itemCommentRepository.totalReplies(comment.getId()));
+        Page<ItemComment> itemComments = itemCommentRepository.findAll(specification,pageable);
+        List<ItemComment> content = itemComments.getContent();
+        for(ItemComment comment : content) comment.setRepliesCount(itemCommentRepository.totalReplies(comment.getId()));
         return content;
+    }
+
+
+    public ItemComment findItemCommentBySlug(String slug){
+        return itemCommentRepository.findItemCommentBySlug(slug);
     }
 
 
@@ -46,10 +51,14 @@ public class ItemCommentService extends  CommonRepository {
             }
 
         }else{
-            ItemComments itemComments = new ItemComments(loggedUser);
+            ItemComment itemComments = new ItemComment();
             itemComments.setItemId(itemCommentsDto.getItemId());
             itemComments.setMessage(itemCommentsDto.getMessage());
             itemComments.setParentId(itemCommentsDto.getParentId());
+            itemComments.setParentId(itemCommentsDto.getParentId());
+            itemComments.setUser(loggedUser);
+            itemComments.setCreatedAt(Utils.getCurrentMillis());
+            itemComments.setUpdatedAt(Utils.getCurrentMillis());
             itemComments = itemCommentRepository.save(itemComments);
             if(itemComments.getId() > 0){
                 responseObj.put("message","Comment successfully saved.");

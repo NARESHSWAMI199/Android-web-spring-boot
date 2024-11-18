@@ -19,7 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Table(name = "item_comments")
 @Where(clause = " is_deleted != 'Y'")
-public class ItemComments {
+public class ItemComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
@@ -51,14 +51,6 @@ public class ItemComments {
 
     @Transient
     Integer repliesCount;
-
-
-
-    public ItemComments (User loggedUser) {
-        this.createdAt = Utils.getCurrentMillis();
-        this.updatedAt = Utils.getCurrentMillis();
-        this.user.setId(loggedUser.getId());
-    }
 
 
 }

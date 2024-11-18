@@ -18,7 +18,7 @@ public class ItemCommentHbRepository {
 
 
     public int updateComment(ItemCommentsDto itemCommentsDto){
-        String hql = "update ItemComments set message=:message , updatedAt =:updatedAt where slug=:slug";
+        String hql = "update ItemComment set message=:message , updatedAt =:updatedAt where slug=:slug";
         Query query = entityManager.createQuery(hql);
         query.setParameter("message", itemCommentsDto.getMessage());
         query.setParameter("updatedAt" , Utils.getCurrentMillis());
