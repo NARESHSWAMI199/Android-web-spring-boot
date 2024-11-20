@@ -34,6 +34,10 @@ public class ItemComment {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     User user;
 
+    @Column(name = "likes")
+    Long likes;
+
+
     @Column(name = "parent_id",nullable = false)
     Integer parentId;
 
