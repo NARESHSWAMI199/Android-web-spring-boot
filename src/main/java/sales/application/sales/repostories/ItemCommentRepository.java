@@ -11,7 +11,7 @@ import sales.application.sales.entities.ItemComment;
 public interface ItemCommentRepository extends JpaRepository<ItemComment,Long>, JpaSpecificationExecutor<ItemComment> {
 
     @Query("select count(id) from ItemComment where parentId=:parentId")
-    Integer totalReplies(@Param("parentId") Integer parentId);
+    Integer totalReplies(@Param("parentId") Long parentId);
 
     ItemComment findItemCommentBySlug(String slug);
 }

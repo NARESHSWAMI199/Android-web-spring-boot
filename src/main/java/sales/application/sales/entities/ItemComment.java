@@ -22,7 +22,7 @@ import java.util.UUID;
 public class ItemComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    long id;
 
     @Column(name = "item_id",nullable = false)
     Integer itemId;
@@ -35,8 +35,10 @@ public class ItemComment {
     User user;
 
     @Column(name = "likes")
-    Long likes;
+    Long likes=0L;
 
+    @Column(name = "dislikes")
+    Long dislikes=0L;
 
     @Column(name = "parent_id",nullable = false)
     Integer parentId;
@@ -56,5 +58,11 @@ public class ItemComment {
     @Transient
     Integer repliesCount;
 
+    /** this is dynamic according session user */
+    @Transient
+    Boolean isLiked;
+
+    @Transient
+    Boolean isDisliked;
 
 }

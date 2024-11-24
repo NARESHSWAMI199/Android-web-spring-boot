@@ -27,10 +27,10 @@ public class SalesInterceptor implements HandlerInterceptor {
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
         System.out.println("request url : "+request.getRequestURI());
         try {
-            if (token != null && (token.substring(0, 7)).equals("Bearer ")) {
-                token = token.substring(7, token.length());
+            if (token != null && (token).startsWith("Bearer ")) {
+                token = token.substring(7);
                 String slug = jwtToken.getSlugFromToken(token);
-                /** get user by slug. */
+                /* get user by slug. */
                 User user = userRepository.findUserBySlug(slug);
                 request.setAttribute("user",user);
                 return true;
