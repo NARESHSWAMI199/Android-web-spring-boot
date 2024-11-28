@@ -35,6 +35,23 @@ logging:
     org:
       hibernate:
         SQL: DEBUG
+
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+
+    health:
+      show-details=always:
+
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
 #    management.endpoints.web.exposure.include =  health,info,prometheus,metrics
 #    management.endpoint.health.show-details =  always
 #    management.endpoint.metrics.enabled =  true
@@ -42,7 +59,6 @@ logging:
 #
 #
 #    spring.servlet.multipart.max-file-size=1000MB   management.endpoints.web.base-path =  /actuator
-#    management.endpoints.web.exposure.include =  health,info,prometheus,metrics
 #    management.endpoint.health.show-details =  always
 #    management.endpoint.metrics.enabled =  true
 #    management.endpoint.prometheus.enabled =  true
@@ -53,24 +69,6 @@ logging:
 
 jwt:
   secret : saleispower
-
-
-
-
-profile :
-  #  absolute : C:/Users/DATA/Documents/sales/sales-backend/src/main/resources/public/
-  absolute  : /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/images/profiles/
-  relative :
-  #  get : src/main/resources/public/
-  get : src/main/resources/images/profiles/
-
-
-item:
-  absolute: /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/images/items/
-  #    absolute  : /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/images/store/
-  relative:
-  #  get : src/main/resources/images/store/
-  get: src/main/resources/images/items/
 
 
 profile :
