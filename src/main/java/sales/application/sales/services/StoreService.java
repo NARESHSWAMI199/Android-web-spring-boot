@@ -11,13 +11,13 @@ import sales.application.sales.entities.ItemCategory;
 import sales.application.sales.entities.Store;
 import sales.application.sales.entities.StoreCategory;
 import sales.application.sales.entities.StoreSubCategory;
+import sales.application.sales.specifications.ItemSpecifications;
+import sales.application.sales.specifications.StoreSpecifications;
 
 import java.util.List;
 import java.util.Map;
 
-import static sales.application.sales.specifications.StoreSpecifications.isCategory;
-import static sales.application.sales.specifications.StoreSpecifications.isSubcategory;
-import static sales.application.sales.specifications.StoreSpecifications.containsName;
+import static sales.application.sales.specifications.StoreSpecifications.*;
 
 
 @Service
@@ -32,7 +32,10 @@ public class StoreService extends CommonRepository {
     /** if you need more filters in future */
     public Page<Store> getAllStore(SearchFilters filters) {
         Specification<Store> specification = Specification.where(
-                (containsName(filters.getSearchKey()))
+                (StoreSpecifications.containsName(filters.getSearchKey().trim())
+                    .or(isCategoryName(filters.getSearchKey().trim()))
+                    .or(isSubcategoryName(filters.getSearchKey().trim()))
+                )
                 .and(isCategory(filters.getCategoryId()))
                 .and(isSubcategory(filters.getSubcategoryId()))
         );

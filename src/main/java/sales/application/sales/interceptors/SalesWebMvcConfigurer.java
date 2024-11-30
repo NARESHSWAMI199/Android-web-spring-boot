@@ -31,7 +31,8 @@ public class SalesWebMvcConfigurer implements WebMvcConfigurer {
                 "/auth/register",
                 "/comments/all",
                 "/comments/detail/**",
-                "/auth/profile/**"
+                "/auth/profile/**",
+                "/paytm/**"
         };
         registry.addInterceptor(new SalesInterceptor(jwtToken,userRepository))
                 .excludePathPatterns(excludedPaths);

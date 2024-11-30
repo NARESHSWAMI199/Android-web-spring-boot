@@ -30,4 +30,21 @@ public class StoreSpecifications {
         };
     }
 
+    public static Specification<Store> isCategoryName(String category ){
+        if(category == null || category.isEmpty()) return null;
+        return (root, query, builder) -> {
+            Join<Item,ItemCategory> itemCategoryJoin = root.join("storeCategory",JoinType.LEFT);
+            return builder.like(itemCategoryJoin.get("category"), "%"+category+"%");
+        };
+    }
+
+
+    public static Specification<Store> isSubcategoryName(String subcategory ){
+        if(subcategory == null || subcategory.isEmpty()) return null;
+        return (root, query, builder) -> {
+            Join<Item,ItemCategory> itemCategoryJoin = root.join("storeSubCategory",JoinType.LEFT);
+            return builder.like(itemCategoryJoin.get("subcategory"), "%"+subcategory+"%");
+        };
+    }
+
 }
