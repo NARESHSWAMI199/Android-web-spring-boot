@@ -21,15 +21,15 @@ import java.util.Map;
 public class ItemCommentController extends CommonService {
 
     @PostMapping("all")
-    public ResponseEntity<List<ItemComment>> getAllUsers(@RequestBody ItemCommentsDto itemCommentsFilterDto, HttpServletRequest request) {
+    public ResponseEntity<Map<String,Object>> getAllUsers(@RequestBody ItemCommentsDto itemCommentsFilterDto, HttpServletRequest request) {
         User loggedUser = null;
         try {
             loggedUser = itemCommentService.getUserByRequest(request);
         }catch (ExpiredJwtException ex){
             logger.info("session expired.");
         }
-        List<ItemComment> itemCommentsPage =  itemCommentService.getALlItemComment(itemCommentsFilterDto,loggedUser);
-        return new ResponseEntity<>(itemCommentsPage, HttpStatus.OK);
+        Map<String,Object> comments =  itemCommentService.getALlItemComment(itemCommentsFilterDto,loggedUser);
+        return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
 

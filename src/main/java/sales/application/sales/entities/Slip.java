@@ -2,26 +2,27 @@ package sales.application.sales.entities;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Where;
 
 @Entity
-@Table(name = "slips")
+@Table(name = "slip")
 @Where(clause = "is_deleted != 'y'")
-public class Slips {
-
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class Slip {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
-    @Column(name = "slug")
-    String  slug;
-    @Column(name = "item_id")
-    String  itemId;
-    @Column(name = "quantity")
-    Float quantity;
-    @Column(name = "wholesaleId")
-    Integer wholesaleId;
-    @Column(name = "status")
-    String status;
+    @Column(name = "slip_name")
+    String slipName;
+    @Column(name = "is_archived")
+    String isArchived;
     @Column(name = "is_deleted")
     String isDeleted;
     @Column(name = "createdAt")
@@ -30,7 +31,5 @@ public class Slips {
     Long updatedAt;
     @Column(name = "updated_by")
     Integer updatedBy;
-    @Column(name="created_by")
-    Integer createdBy;
 
 }

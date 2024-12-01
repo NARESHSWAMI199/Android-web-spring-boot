@@ -28,7 +28,8 @@ public class ItemCommentService extends  CommonRepository {
 
     @Autowired
     JwtToken jwtToken;
-    public List<ItemComment> getALlItemComment(ItemCommentsDto filters,User loggedUser) {
+    public Map<String,Object> getALlItemComment(ItemCommentsDto filters,User loggedUser) {
+        Map<String,Object> map = new HashMap<>();
         Specification<ItemComment> specification = Specification.where(
                 (containsName(filters.getSearchKey()))
                         .and(hasSlug(filters.getCommentSlug()))
@@ -46,7 +47,9 @@ public class ItemCommentService extends  CommonRepository {
             }
 
         }
-        return content;
+        map.put("content", content);
+        map.put("totalElements", itemComments.getTotalElements());
+        return map;
     }
 
 
