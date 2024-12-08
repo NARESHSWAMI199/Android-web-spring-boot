@@ -69,10 +69,9 @@ public class UserService  extends CommonRepository{
         userDto.setUsername(username);
         User updatedUser = saveUser(userDto);
         userDto.setUserId(updatedUser.getId());
-        System.out.println(userDto.getUserType() + " : "+userDto.getSlug());
         if (updatedUser.getId() > 0) {
             responseObj.put("res", updatedUser);
-            responseObj.put("message", "successfully inserted.");
+            responseObj.put("message", "You have successfully registered.");
             responseObj.put("status", 200);
         } else {
             responseObj.put("message", "nothing to save. may be something went wrong please contact to administrator.");
@@ -90,7 +89,7 @@ public class UserService  extends CommonRepository{
         user.setPassword(userDto.getPassword());
         user.setContact(userDto.getContact());
         user.setEmail(userDto.getEmail());
-        user.setUserType(userDto.getUserType());
+        user.setUserType("R");
         user.setPassword(userDto.getPassword());
         return userRepository.save(user);
     }
