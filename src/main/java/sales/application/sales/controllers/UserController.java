@@ -73,14 +73,8 @@ public class UserController extends CommonService{
     @PostMapping(value = {"update"})
     public ResponseEntity<Map<String, Object>> updateAuth(HttpServletRequest request, @RequestBody UserDto userDto) {
         Map<String,Object> responseObj = new HashMap<>();
-        try {
-            User logggedUser = (User) request.getAttribute("user");
-            responseObj = userService.updateUserProfile(userDto, logggedUser);
-        } catch (Exception e) {
-            responseObj.put("message", e.getMessage());
-            responseObj.put("status", 500);
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-        }
+        User logggedUser = (User) request.getAttribute("user");
+        responseObj = userService.updateUserProfile(userDto, logggedUser);
         return new ResponseEntity<>(responseObj, HttpStatus.valueOf((Integer) responseObj.get("status")));
 
     }

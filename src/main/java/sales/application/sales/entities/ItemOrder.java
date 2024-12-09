@@ -1,10 +1,7 @@
 package sales.application.sales.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Where;
 
 @Table(name = "item_order")
@@ -14,6 +11,7 @@ import org.hibernate.annotations.Where;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ItemOrder {
 
     @Id
