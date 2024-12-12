@@ -15,16 +15,19 @@ import org.hibernate.annotations.Where;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class Slip {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
     @Column(name = "slip_name")
     String slipName;
+    @Column(name = "user_id")
+    Integer userId;
     @Column(name = "is_archived")
     String isArchived;
     @Column(name = "is_deleted")
-    String isDeleted;
+    String isDeleted = "N";
     @Column(name = "createdAt")
     Long createdAt;
     @Column(name = "updatedAt")

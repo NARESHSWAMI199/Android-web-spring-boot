@@ -3,6 +3,8 @@ package sales.application.sales.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import sales.application.sales.repostories.ItemOrderRepository;
+import sales.application.sales.repostories.SlipHbRepository;
 import sales.application.sales.repostories.SlipRepository;
 import sales.application.sales.services.ItemCommentService;
 import sales.application.sales.services.ItemService;
@@ -15,21 +17,27 @@ import java.util.logging.Logger;
 public class CommonService {
 
     @Autowired
-    UserService userService;
+    protected UserService userService;
 
     @Autowired
-    StoreService storeService;
+    protected StoreService storeService;
 
     @Autowired
-    ItemService itemService;
+    protected ItemService itemService;
 
     @Autowired
-    Logger logger;
+    protected Logger logger;
 
     @Autowired
-    ItemCommentService itemCommentService;
+    protected ItemCommentService itemCommentService;
 
     @Autowired
-    SlipRepository slipRepository;
+    protected SlipRepository slipRepository;
+
+    @Autowired
+    protected SlipHbRepository slipHbRepository;
+
+    @Autowired
+    protected ItemOrderRepository itemOrderRepository;
 
 }
