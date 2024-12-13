@@ -8,9 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ItemOrderDto {
-    int orderId = 0;
-    Integer itemId;
-    Integer userId;
+    Integer itemId;;
     Integer quantity;
     Integer slipId;
 }

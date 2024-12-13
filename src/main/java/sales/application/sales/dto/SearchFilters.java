@@ -22,5 +22,6 @@ public class SearchFilters {
     Integer pageNumber =0;
     Integer categoryId;
     Integer subcategoryId;
+    String slipName;
 
 }

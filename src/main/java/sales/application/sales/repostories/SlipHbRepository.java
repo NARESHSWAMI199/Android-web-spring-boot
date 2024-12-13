@@ -27,11 +27,12 @@ public class SlipHbRepository {
         query.setParameter("slipName",slipDto.getName());
         query.setParameter("updatedAt", Utils.getCurrentMillis());
         query.setParameter("updatedBy",loggedUser.getId());
+        query.setParameter("id",slipDto.getId());
         return query.executeUpdate();
     }
 
     public int insertNewOrderInSlip(int slipId, int orderId){
-        String sql = "insert into slip_items ('slip_id','item_order_id') value(:slipId, :itemOrderId)";
+        String sql = "insert into slip_items (`slip_id`,`item_order_id`) value(:slipId, :itemOrderId)";
         Query nativeQuery = entityManager.createNativeQuery(sql);
         nativeQuery.setParameter("slipId",slipId);
         nativeQuery.setParameter("itemOrderId",orderId);

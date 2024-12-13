@@ -3,6 +3,7 @@ package sales.application.sales.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Where;
+import sales.application.sales.utilities.Utils;
 
 @Table(name = "item_order")
 @Entity
@@ -11,7 +12,6 @@ import org.hibernate.annotations.Where;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class ItemOrder {
 
     @Id
@@ -26,11 +26,11 @@ public class ItemOrder {
     @Column(name = "status")
     String status;
     @Column(name = "is_deleted")
-    String isDeleted;
+    String isDeleted = "N";
     @Column(name = "createdAt")
-    Long createdAt;
+    Long createdAt=Utils.getCurrentMillis();
     @Column(name = "updatedAt")
-    Long updatedAt;
+    Long updatedAt = Utils.getCurrentMillis();
     @Column(name = "updated_by")
     Integer updatedBy;
 

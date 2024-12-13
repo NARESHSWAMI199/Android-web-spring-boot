@@ -7,8 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import sales.application.sales.dto.SearchFilters;
-import sales.application.sales.entities.ItemCategory;
-import sales.application.sales.entities.ItemSubCategory;
 import sales.application.sales.repostories.*;
 
 
@@ -42,10 +40,22 @@ public class CommonRepository{
     protected StoreSubCategoryRepository storeSubCategoryRepository;
 
     @Autowired
-    ItemCommentRepository itemCommentRepository;
+    protected ItemCommentRepository itemCommentRepository;
 
     @Autowired
-    ItemCommentHbRepository itemCommentHbRepository;
+    protected ItemCommentHbRepository itemCommentHbRepository;
+
+    @Autowired
+    protected SlipRepository slipRepository;
+
+    @Autowired
+    protected SlipHbRepository slipHbRepository;
+
+    @Autowired
+    protected ItemOrderRepository itemOrderRepository;
+
+    @Autowired
+    protected SlipItemsRepository slipItemsRepository;
 
 
     public Pageable getPageable(SearchFilters searchFilters) {

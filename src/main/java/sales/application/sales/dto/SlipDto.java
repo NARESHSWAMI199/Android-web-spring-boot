@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class SlipDto {
+    int id = 0;
     String name;
     Boolean isArchived;
 }

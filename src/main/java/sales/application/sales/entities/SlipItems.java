@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Table(name = "slip_items")
 @Entity
@@ -24,7 +25,7 @@ public class SlipItems {
     @JoinColumn(name = "slip_id",referencedColumnName = "id")
     Slip slip;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "item_order_id",referencedColumnName = "id")
-    List<ItemOrder> itemOrders;
+    ItemOrder itemOrders;
 }

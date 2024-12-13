@@ -1,8 +1,11 @@
 package sales.application.sales.services;
 
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import sales.application.sales.controllers.CommonService;
+import sales.application.sales.dto.SearchFilters;
 import sales.application.sales.dto.SlipAndOrderDto;
 import sales.application.sales.dto.SlipDto;
 import sales.application.sales.entities.Slip;
@@ -10,13 +13,48 @@ import sales.application.sales.entities.User;
 import sales.application.sales.exceptions.MyException;
 import sales.application.sales.utilities.Utils;
 
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
+
 
 @Service
-public class SlipService extends CommonService {
+public class SlipService extends CommonRepository {
 
+
+
+    public Page<Slip> getAllActiveSlips(SearchFilters  searchFilters,User loggeduser) {
+        Pageable pageable = getPageable(searchFilters);
+        return slipRepository.findAllByUserId(loggeduser.getId(),pageable);
+    }
+
+
+
+    public Map<String,Object> createOrUpdate(SlipDto slipDto,User loggedUser){
+        Map<String,Object> result = new HashMap<>();
+        if(slipDto.getId() < 1){
+            Slip slip = createNewSlip(slipDto,loggedUser);
+            if(slip.getId() > 0){
+                result.put("message", "Slip successfully created.");
+                result.put("status", 200);
+            }else {
+                result.put("message", "Something went wrong during insert.");
+                result.put("status", 400);
+            }
+        }else {
+            int isUpdated = updateSlip(slipDto, loggedUser);
+            if(isUpdated > 0){
+                result.put("message", "Slip successfully updated.");
+                result.put("status", 201);
+            }else {
+                result.put("message", "Something went wrong during update.");
+                result.put("status", 200);
+            }
+        }
+        return  result;
+    }
 
     public Slip createNewSlip(SlipDto slipDto, User loggedUser){
+        if(Utils.isEmpty(slipDto.getName())) throw new MyException("Slip name can't be blank.");
         Slip slip = new Slip();
         slip.setSlipName(slipDto.getName());
         slip.setUserId(loggedUser.getId());

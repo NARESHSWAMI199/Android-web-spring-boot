@@ -6,10 +6,7 @@ import org.springframework.stereotype.Component;
 import sales.application.sales.repostories.ItemOrderRepository;
 import sales.application.sales.repostories.SlipHbRepository;
 import sales.application.sales.repostories.SlipRepository;
-import sales.application.sales.services.ItemCommentService;
-import sales.application.sales.services.ItemService;
-import sales.application.sales.services.StoreService;
-import sales.application.sales.services.UserService;
+import sales.application.sales.services.*;
 
 import java.util.logging.Logger;
 
@@ -32,12 +29,9 @@ public class CommonService {
     protected ItemCommentService itemCommentService;
 
     @Autowired
-    protected SlipRepository slipRepository;
+    protected SlipService slipService;
 
     @Autowired
-    protected SlipHbRepository slipHbRepository;
-
-    @Autowired
-    protected ItemOrderRepository itemOrderRepository;
+    protected  ItemOrderService itemOrderService;
 
 }
