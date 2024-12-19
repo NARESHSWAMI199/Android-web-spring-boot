@@ -55,13 +55,14 @@ public class SlipService extends CommonRepository {
 
     public Slip createNewSlip(SlipDto slipDto, User loggedUser){
         if(Utils.isEmpty(slipDto.getName())) throw new MyException("Slip name can't be blank.");
-        Slip slip = new Slip();
-        slip.setSlipName(slipDto.getName());
-        slip.setUserId(loggedUser.getId());
-        slip.setCreatedAt(Utils.getCurrentMillis());
-        slip.setUpdatedAt(Utils.getCurrentMillis());
-        slip.setIsArchived("N");
-        slip.setUpdatedBy(loggedUser.getId());
+        Slip slip = Slip.builder()
+            .slipName(slipDto.getName())
+            .userId(loggedUser.getId())
+            .createdAt(Utils.getCurrentMillis())
+            .updatedAt(Utils.getCurrentMillis())
+            .isArchived("N")
+            .updatedBy(loggedUser.getId())
+            .build();
         return slipRepository.save(slip);
     }
 
