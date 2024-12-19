@@ -17,8 +17,9 @@ public class ItemOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
-    @Column(name = "item_id")
-    Integer itemId;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "item_id",referencedColumnName = "id")
+    Item item;
     @Column(name = "user_id")
     Integer userId;
     @Column(name = "quantity")

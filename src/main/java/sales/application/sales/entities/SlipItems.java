@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-import java.util.Set;
 
 @Table(name = "slip_items")
 @Entity
@@ -21,11 +19,10 @@ public class SlipItems {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "slip_id",referencedColumnName = "id")
-    Slip slip;
+    @Column(name = "slip_id")
+    Integer slipId;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "item_order_id",referencedColumnName = "id")
-    ItemOrder itemOrders;
+    ItemOrder itemOrder;
 }

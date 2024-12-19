@@ -3,9 +3,6 @@ package sales.application.sales.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sales.application.sales.repostories.ItemOrderRepository;
-import sales.application.sales.repostories.SlipHbRepository;
-import sales.application.sales.repostories.SlipRepository;
 import sales.application.sales.services.*;
 
 import java.util.logging.Logger;

@@ -10,15 +10,13 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import sales.application.sales.dto.ItemOrderDto;
 import sales.application.sales.dto.SearchFilters;
 import sales.application.sales.dto.SlipAndOrderDto;
-import sales.application.sales.entities.ItemOrder;
-import sales.application.sales.entities.Slip;
-import sales.application.sales.entities.SlipItems;
-import sales.application.sales.entities.User;
+import sales.application.sales.entities.*;
 import sales.application.sales.exceptions.MyException;
 import sales.application.sales.utilities.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class ItemOrderService  extends CommonRepository {
@@ -30,8 +28,7 @@ public class ItemOrderService  extends CommonRepository {
 
     public Page<SlipItems> getAllItemOrder(SearchFilters searchFilters,int slipId){
         Pageable pageable = getPageable(searchFilters);
-        Slip slip = slipService.findSlipById(slipId);
-        return  slipItemsRepository.findDistinctBySlip(slip,pageable);
+        return  slipItemsRepository.findDistinctBySlipId(slipId,pageable);
     }
 
     @Transactional
@@ -39,7 +36,9 @@ public class ItemOrderService  extends CommonRepository {
         Map<String,Object> result = new HashMap<>();
         try {
             ItemOrder itemOrder = new ItemOrder();
-            itemOrder.setItemId(itemOrderDto.getItemId());
+            Optional<Item> item = itemRepository.findById(Long.valueOf(itemOrderDto.getItemId()));
+            item.orElseThrow();
+            itemOrder.setItem(item.get());
             itemOrder.setUserId(loggedUser.getId());
             Integer quantity = itemOrderDto.getQuantity();
             if (quantity == null || quantity == 0) {
