@@ -90,4 +90,9 @@ public class SlipService extends CommonRepository {
         return 0;
     }
 
+    public int removeSlipItems(Integer id){
+        return slipItemsHbRepository.deleteSlipItems(id);
+    }
+
+
 }

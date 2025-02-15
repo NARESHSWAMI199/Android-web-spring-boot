@@ -12,6 +12,7 @@ import sales.application.sales.entities.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static sales.application.sales.specifications.ItemSpecifications.*;
 
@@ -47,7 +48,10 @@ public class ItemService extends CommonRepository {
 
 
     public Item findItemBySLug(String slug){
-        return itemRepository.findItemBySlug(slug);
+        Item item = itemRepository.findItemBySlug(slug);
+        Optional<Store> store = storeRepository.findById(item.getWholesaleId());
+        store.ifPresent(item::setStore);
+        return item;
     }
 
 

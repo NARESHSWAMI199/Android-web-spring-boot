@@ -51,5 +51,21 @@ public class SlipController extends CommonService {
         return new ResponseEntity<>(result,HttpStatus.valueOf((Integer) result.get("status")));
     }
 
+    @PostMapping("remove-order")
+    public ResponseEntity<Map<String,Object>> removeOrderInSlip (@RequestBody  Map<String,Object> params ) {
+        Map<String,Object> result = new HashMap<>();
+        Integer id = (Integer) params.get("id");
+        int itemDeleted = slipService.removeSlipItems(id);
+        if(itemDeleted > 0){
+            result.put("message","Item successfully deleted.");
+            result.put("status", 200);
+        }else {
+            result.put("message","No record found to update.");
+            result.put("status", 404);
+        }
+
+        return new ResponseEntity<>(result,HttpStatus.valueOf((Integer) result.get("status")));
+    }
+
 
 }

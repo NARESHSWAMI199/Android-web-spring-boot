@@ -28,7 +28,7 @@ public class ItemOrderService  extends CommonRepository {
 
     public Page<SlipItems> getAllItemOrder(SearchFilters searchFilters,int slipId){
         Pageable pageable = getPageable(searchFilters);
-        return  slipItemsRepository.findDistinctBySlipId(slipId,pageable);
+        return slipItemsRepository.findDistinctBySlipId(slipId, pageable);
     }
 
     @Transactional

@@ -2,12 +2,13 @@ package sales.application.sales.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.Where;
 import sales.application.sales.utilities.Utils;
 
 @Table(name = "item_order")
 @Entity
-@Where(clause = "is_deleted != 'y'")
+@SQLRestriction("is_deleted != 'Y'")
 @Getter
 @Setter
 @AllArgsConstructor

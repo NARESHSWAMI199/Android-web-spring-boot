@@ -28,7 +28,7 @@ public class ItemCommentService extends  CommonRepository {
 
     @Autowired
     JwtToken jwtToken;
-    public Map<String,Object> getALlItemComment(ItemCommentsDto filters,User loggedUser) {
+    public Map<String,Object> getAllItemComment(ItemCommentsDto filters,User loggedUser) {
         Map<String,Object> map = new HashMap<>();
         Specification<ItemComment> specification = Specification.where(
                 (containsName(filters.getSearchKey()))
@@ -164,6 +164,7 @@ public class ItemCommentService extends  CommonRepository {
 
     public User getUserByRequest(HttpServletRequest request){
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        System.err.println(token);
         if (token != null && (token).startsWith("Bearer ")) {
             token = token.substring(7);
             String slug = jwtToken.getSlugFromToken(token);

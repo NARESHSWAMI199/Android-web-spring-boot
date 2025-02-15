@@ -18,6 +18,7 @@ import sales.application.sales.entities.StoreSubCategory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,10 +34,20 @@ public class StoreController extends CommonService {
 
 
     @GetMapping("/detail/{slug}")
-    public ResponseEntity<Store> getAllStore(@PathVariable String slug) {
+    public ResponseEntity<Store> getStoreDetailBySlug(@PathVariable String slug) {
         Store stores = storeService.findStoreBySlug(slug);
         return new ResponseEntity<Store>(stores, HttpStatus.valueOf(200));
     }
+
+
+    @GetMapping("/-detail/{id}")
+    public ResponseEntity<Map<String,String>> findStoreId(@PathVariable Integer id) {
+        Map<String,String> result = new HashMap<>();
+        String storeName = storeService.getStoreNameById(id);
+        result.put("storeName" , storeName);
+        return new ResponseEntity<>(result, HttpStatus.valueOf(200));
+    }
+
 
     @Value("${store.absolute}")
     String filePath;

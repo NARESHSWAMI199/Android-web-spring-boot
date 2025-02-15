@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.Where;
 import org.springframework.context.annotation.Lazy;
 @Entity
@@ -20,7 +21,7 @@ import org.springframework.context.annotation.Lazy;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Where(clause = "is_deleted != 'Y' and status != 'D'")
+@SQLRestriction("is_deleted != 'Y' and status != 'D'")
 //@JsonInclude(JsonInclude.Include.ALWAYS)
 public class Store {
 

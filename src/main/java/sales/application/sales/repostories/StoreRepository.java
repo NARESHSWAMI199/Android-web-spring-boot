@@ -6,13 +6,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import sales.application.sales.entities.Store;
 
 import java.util.Map;
 
 @Repository
-public interface StoreRepository extends JpaRepository<Store,Long>, JpaSpecificationExecutor<Store> {
+public interface StoreRepository extends JpaRepository<Store,Integer>, JpaSpecificationExecutor<Store> {
 
     @Query(value = "select s.name as StoreName, " +
         "s.avtar as storeAvtar," +
@@ -40,6 +41,9 @@ public interface StoreRepository extends JpaRepository<Store,Long>, JpaSpecifica
 
 
     Store findStoreBySlug(String slug);
+
+    @Query(value = "select name from Store where id=:id")
+    String getStoreNameById(@Param("id") Integer id);
 
 
 }

@@ -28,7 +28,7 @@ public class ItemCommentController extends CommonService {
         }catch (ExpiredJwtException ex){
             logger.info("session expired.");
         }
-        Map<String,Object> comments =  itemCommentService.getALlItemComment(itemCommentsFilterDto,loggedUser);
+        Map<String,Object> comments =  itemCommentService.getAllItemComment(itemCommentsFilterDto,loggedUser);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 

@@ -7,11 +7,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import sales.application.sales.dto.SearchFilters;
-import sales.application.sales.entities.ItemCategory;
 import sales.application.sales.entities.Store;
 import sales.application.sales.entities.StoreCategory;
 import sales.application.sales.entities.StoreSubCategory;
-import sales.application.sales.specifications.ItemSpecifications;
 import sales.application.sales.specifications.StoreSpecifications;
 
 import java.util.List;
@@ -46,6 +44,11 @@ public class StoreService extends CommonRepository {
     public Store findStoreBySlug(String slug){
         return storeRepository.findStoreBySlug(slug);
     }
+
+    public String getStoreNameById(Integer storeId){
+        return storeRepository.getStoreNameById(storeId);
+    }
+
 
     public List<StoreCategory> getAllStoreCategories(SearchFilters searchFilters) {
         Sort sort = Sort.by(searchFilters.getOrderBy());
