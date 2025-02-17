@@ -1,19 +1,30 @@
 package sales.application.sales.services;
 
 
+import static sales.application.sales.specifications.ItemSpecifications.containsName;
+import static sales.application.sales.specifications.ItemSpecifications.isCategory;
+import static sales.application.sales.specifications.ItemSpecifications.isCategoryName;
+import static sales.application.sales.specifications.ItemSpecifications.isSubcategory;
+import static sales.application.sales.specifications.ItemSpecifications.isSubcategoryName;
+import static sales.application.sales.specifications.ItemSpecifications.isWholesaleId;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import sales.application.sales.dto.ItemDto;
 import sales.application.sales.dto.SearchFilters;
-import sales.application.sales.entities.*;
-
-import java.util.List;
-import java.util.Map;
-
-import static sales.application.sales.specifications.ItemSpecifications.*;
+import sales.application.sales.entities.Item;
+import sales.application.sales.entities.ItemCategory;
+import sales.application.sales.entities.ItemSubCategory;
+import sales.application.sales.entities.Store;
 
 
 @Service
@@ -22,7 +33,11 @@ public class ItemService extends CommonRepository {
     /** custom query */
     public Page<Map<String,Object>> getAllItems(SearchFilters searchFilters){
         Pageable pageable = getPageable(searchFilters);
-        return itemRepository.findALlItem(pageable);
+        String userZipCode = searchFilters.getZipCode();
+        if (userZipCode == null || userZipCode.isEmpty()) {
+            userZipCode = "0";
+        }
+        return itemRepository.findAllItem(pageable, userZipCode);
     }
 
 
@@ -34,10 +49,23 @@ public class ItemService extends CommonRepository {
                         .and(isWholesaleId(searchFilters.getStoreId()))
                         .and(isCategory(searchFilters.getCategoryId()))
                         .and(isSubcategory(searchFilters.getSubcategoryId()))
-
         );
         Pageable pageable = getPageable(searchFilters);
-        return itemRepository.findAll(specification,pageable);
+        Page<Item> items = itemRepository.findAll(specification, pageable);
+
+        if (searchFilters.getZipCode() != null && !searchFilters.getZipCode().isEmpty()) {
+            List<Item> itemList = items.getContent();
+            itemList.sort(Comparator.comparing(item -> {
+                Store store = storeRepository.findById(((Item) item).getWholesaleId()).orElse(null);
+                if (store != null && store.getAddress() != null) {
+                    return Integer.parseInt(store.getAddress().getZipCode());
+                }
+                return Integer.MAX_VALUE;
+            }).thenComparing(item -> Integer.parseInt(searchFilters.getZipCode())));
+            return new PageImpl<>(itemList, pageable, items.getTotalElements());
+        }
+
+        return items;
     }
 
     public List<ItemCategory> getAllItemCategories() {

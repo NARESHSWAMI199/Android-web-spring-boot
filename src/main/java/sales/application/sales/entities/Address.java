@@ -26,6 +26,10 @@ public class Address {
     City city;
     @Column(name="state")
     Integer state;
+    @Column(name="zip_code")
+    String zipCode;
+    @Column(name="street")
+    String street;
     @Column(name="latitude")
     Float latitude;
     @Column(name="altitude")

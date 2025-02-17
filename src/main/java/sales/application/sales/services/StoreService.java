@@ -1,23 +1,25 @@
 package sales.application.sales.services;
 
 
+import static sales.application.sales.specifications.StoreSpecifications.isCategory;
+import static sales.application.sales.specifications.StoreSpecifications.isCategoryName;
+import static sales.application.sales.specifications.StoreSpecifications.isSubcategory;
+import static sales.application.sales.specifications.StoreSpecifications.isSubcategoryName;
+
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import sales.application.sales.dto.SearchFilters;
-import sales.application.sales.entities.ItemCategory;
 import sales.application.sales.entities.Store;
 import sales.application.sales.entities.StoreCategory;
 import sales.application.sales.entities.StoreSubCategory;
-import sales.application.sales.specifications.ItemSpecifications;
 import sales.application.sales.specifications.StoreSpecifications;
-
-import java.util.List;
-import java.util.Map;
-
-import static sales.application.sales.specifications.StoreSpecifications.*;
 
 
 @Service
@@ -25,7 +27,11 @@ public class StoreService extends CommonRepository {
 
     public Page<Map<String,Object>> getAllStores(SearchFilters searchFilters){
         Pageable pageable = getPageable(searchFilters);
-        return storeRepository.findAllStore(pageable,searchFilters.getSearchKey());
+        String userZipCode = searchFilters.getZipCode();
+        if(userZipCode == null || userZipCode.isEmpty()){
+            userZipCode = "0";
+        }
+        return storeRepository.findAllStore(pageable, searchFilters.getSearchKey(), userZipCode);
     }
 
 

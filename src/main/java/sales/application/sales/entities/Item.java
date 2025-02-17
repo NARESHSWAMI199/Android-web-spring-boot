@@ -6,10 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.Where;
+
 
 import java.io.Serializable;
+
+import org.hibernate.annotations.SQLRestriction;
 
 
 @Getter
@@ -19,7 +20,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "item")
-@Where(clause = "is_deleted != 'Y' and  status !='D' ")
+@SQLRestriction("is_deleted != 'Y' and  status !='D' ")
 public class Item implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -23,5 +23,6 @@ public class SearchFilters {
     Integer categoryId;
     Integer subcategoryId;
     String slipName;
+    String zipCode;
 
 }
