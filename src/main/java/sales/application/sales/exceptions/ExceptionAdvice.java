@@ -126,7 +126,7 @@ public class ExceptionAdvice {
             }catch (Exception e) {
                 ex.printStackTrace();
                 String errorMessage = ex.getMessage();
-                errorMessage = errorMessage.contains(";") ? errorMessage.substring(0, errorMessage.indexOf(";")) : errorMessage;
+                errorMessage = errorMessage !=null && errorMessage.contains(";") ? errorMessage.substring(0, errorMessage.indexOf(";")) : errorMessage;
                 message = new ErrorDto(errorMessage, 500);
             }
             logger.info(ex.getMessage());

@@ -8,6 +8,7 @@ import static sales.application.sales.specifications.ItemSpecifications.isSubcat
 import static sales.application.sales.specifications.ItemSpecifications.isSubcategoryName;
 import static sales.application.sales.specifications.ItemSpecifications.isWholesaleId;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,7 @@ public class ItemService extends CommonRepository {
 
 
     public Page<Item> getAllItem(ItemDto searchFilters) {
+        System.err.println( "The zip code : " + searchFilters.getZipCode());
         Specification<Item> specification = Specification.where(
                 (containsName(searchFilters.getSearchKey().trim())
                         .or(isCategoryName(searchFilters.getSearchKey().trim()))
@@ -54,7 +56,7 @@ public class ItemService extends CommonRepository {
         Page<Item> items = itemRepository.findAll(specification, pageable);
 
         if (searchFilters.getZipCode() != null && !searchFilters.getZipCode().isEmpty()) {
-            List<Item> itemList = items.getContent();
+            List<Item> itemList = new ArrayList<>(items.getContent());
             itemList.sort(Comparator.comparing(item -> {
                 Store store = storeRepository.findById(item.getWholesaleId()).orElse(null);
                 if (store != null && store.getAddress() != null) {
