@@ -8,10 +8,13 @@ import static sales.application.sales.specifications.StoreSpecifications.isSubca
 
 import java.util.List;
 import java.util.Map;
+import java.util.Comparator;
+import java.util.ArrayList;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +49,20 @@ public class StoreService extends CommonRepository {
                 .and(isSubcategory(filters.getSubcategoryId()))
         );
         Pageable pageable = getPageable(filters);
-        return storeRepository.findAll(specification,pageable);
+        Page<Store> stores = storeRepository.findAll(specification, pageable);
+
+        if (filters.getZipCode() != null && !filters.getZipCode().isEmpty()) {
+            List<Store> storeList = new ArrayList<>(stores.getContent());
+            storeList.sort(Comparator.comparing(store -> {
+                if (store.getAddress() != null && store.getAddress().getZipCode() != null) {
+                    return Math.abs(Integer.parseInt(store.getAddress().getZipCode()) - Integer.parseInt(filters.getZipCode()));
+                }
+                return Integer.MAX_VALUE;
+            }));
+            return new PageImpl<>(storeList, pageable, stores.getTotalElements());
+        }
+
+        return stores;
     }
 
     public Store findStoreBySlug(String slug){
