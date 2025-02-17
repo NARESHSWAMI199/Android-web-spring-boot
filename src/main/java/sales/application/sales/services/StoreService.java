@@ -53,6 +53,11 @@ public class StoreService extends CommonRepository {
         return storeRepository.findStoreBySlug(slug);
     }
 
+    public String getStoreNameById(Integer storeId){
+        return storeRepository.getStoreNameById(storeId);
+    }
+
+
     public List<StoreCategory> getAllStoreCategories(SearchFilters searchFilters) {
         Sort sort = Sort.by(searchFilters.getOrderBy());
            sort = searchFilters.getOrder().equals("asc") ? sort.ascending():sort.descending() ;

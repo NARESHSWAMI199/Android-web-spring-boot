@@ -26,6 +26,16 @@ public class ExceptionAdvice {
     @Autowired
     Logger logger;
 
+
+
+        @ExceptionHandler(value = {NotFoundException.class})
+        @ResponseStatus(value = HttpStatus.NOT_FOUND)
+        public ErrorDto notFoundException(NotFoundException ex, WebRequest request) {
+            ErrorDto message = new ErrorDto(ex.getMessage(),404);
+            logger.info(ex.getMessage());
+            return message;
+        }
+
         @ExceptionHandler(value = {ObjectNotFoundException.class})
         @ResponseStatus(value = HttpStatus.NOT_FOUND)
         public ErrorDto resourceNotFoundException(ObjectNotFoundException ex, WebRequest request) {

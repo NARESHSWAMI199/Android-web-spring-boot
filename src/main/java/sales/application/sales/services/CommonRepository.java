@@ -57,6 +57,12 @@ public class CommonRepository{
     @Autowired
     protected SlipItemsRepository slipItemsRepository;
 
+    @Autowired
+    protected ItemOrderHbRepository itemOrderHbRepository;
+
+    @Autowired
+    protected SlipItemsHbRepository slipItemsHbRepository;
+
 
     public Pageable getPageable(SearchFilters searchFilters) {
         Sort sort = Sort.by(searchFilters.getOrderBy());

@@ -1,17 +1,6 @@
 package sales.application.sales.services;
 
 
-import static sales.application.sales.specifications.ItemSpecifications.containsName;
-import static sales.application.sales.specifications.ItemSpecifications.isCategory;
-import static sales.application.sales.specifications.ItemSpecifications.isCategoryName;
-import static sales.application.sales.specifications.ItemSpecifications.isSubcategory;
-import static sales.application.sales.specifications.ItemSpecifications.isSubcategoryName;
-import static sales.application.sales.specifications.ItemSpecifications.isWholesaleId;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +10,14 @@ import org.springframework.stereotype.Service;
 
 import sales.application.sales.dto.ItemDto;
 import sales.application.sales.dto.SearchFilters;
+import sales.application.sales.entities.*;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static sales.application.sales.specifications.ItemSpecifications.*;
 import sales.application.sales.entities.Item;
 import sales.application.sales.entities.ItemCategory;
 import sales.application.sales.entities.ItemSubCategory;
@@ -49,6 +46,7 @@ public class ItemService extends CommonRepository {
                         .and(isWholesaleId(searchFilters.getStoreId()))
                         .and(isCategory(searchFilters.getCategoryId()))
                         .and(isSubcategory(searchFilters.getSubcategoryId()))
+
         );
         Pageable pageable = getPageable(searchFilters);
         Page<Item> items = itemRepository.findAll(specification, pageable);
@@ -75,7 +73,10 @@ public class ItemService extends CommonRepository {
 
 
     public Item findItemBySLug(String slug){
-        return itemRepository.findItemBySlug(slug);
+        Item item = itemRepository.findItemBySlug(slug);
+        Optional<Store> store = storeRepository.findById(item.getWholesaleId());
+        store.ifPresent(item::setStore);
+        return item;
     }
 
 
