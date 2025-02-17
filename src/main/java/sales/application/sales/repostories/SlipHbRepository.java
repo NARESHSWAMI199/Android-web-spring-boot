@@ -39,4 +39,14 @@ public class SlipHbRepository {
         return nativeQuery.executeUpdate();
     }
 
+
+    public int deleteSlip(int slipId, int userId){
+        String hql = "update Slip set isDeleted = 'Y' , updatedAt =:updatedAt where id = :slipId and userId =:userId" ;
+        Query query = entityManager.createQuery(hql);
+        query.setParameter("slipId",slipId);
+        query.setParameter("userId",userId);
+        query.setParameter("updatedAt",Utils.getCurrentMillis());
+        return query.executeUpdate();
+    }
+
 }

@@ -35,6 +35,22 @@ public class SlipController extends CommonService {
         return new ResponseEntity<>(slips, HttpStatus.OK);
     }
 
+
+    @PostMapping("delete")
+    public ResponseEntity<Map<String,Object>> deleteSlip (HttpServletRequest request, @RequestBody Map<String,Object> params ) {
+        User loggedUser = (User) request.getAttribute("user");
+        Map<String,Object> responseObj = new HashMap<>();
+        int deleteSlip = slipService.deleteSlip(params, loggedUser);
+        if(deleteSlip > 0){
+            responseObj.put("message","Slip deleted successfully");
+            responseObj.put("status",200);
+        }else{
+            responseObj.put("message","No slip found to delete");
+            responseObj.put("status",404);
+        }
+        return new ResponseEntity<>(responseObj, HttpStatus.valueOf((Integer) responseObj.get("status")));
+    }
+
     @PostMapping(value = {"add","update"})
     public ResponseEntity<Map<String,Object>> addOrUpdateNewSlip (HttpServletRequest request,@RequestBody SlipDto slipDto ) {
         Map<String,Object> result = new HashMap<>();

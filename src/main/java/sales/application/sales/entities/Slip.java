@@ -3,11 +3,12 @@ package sales.application.sales.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "slip")
-@Where(clause = "is_deleted != 'y'")
+@SQLRestriction("is_deleted != 'y'")
 @Getter
 @Setter
 @AllArgsConstructor

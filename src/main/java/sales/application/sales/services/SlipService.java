@@ -3,7 +3,6 @@ package sales.application.sales.services;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import sales.application.sales.dto.SearchFilters;
 import sales.application.sales.dto.SlipAndOrderDto;
@@ -34,8 +33,9 @@ public class SlipService extends CommonRepository {
         if(slipDto.getId() < 1){
             Slip slip = createNewSlip(slipDto,loggedUser);
             if(slip.getId() > 0){
+                result.put("res",slip);
                 result.put("message", "Slip successfully created.");
-                result.put("status", 200);
+                result.put("status", 201);
             }else {
                 result.put("message", "Something went wrong during insert.");
                 result.put("status", 400);
@@ -44,7 +44,7 @@ public class SlipService extends CommonRepository {
             int isUpdated = updateSlip(slipDto, loggedUser);
             if(isUpdated > 0){
                 result.put("message", "Slip successfully updated.");
-                result.put("status", 201);
+                result.put("status", 200);
             }else {
                 result.put("message", "Something went wrong during update.");
                 result.put("status", 200);
@@ -61,6 +61,7 @@ public class SlipService extends CommonRepository {
             .createdAt(Utils.getCurrentMillis())
             .updatedAt(Utils.getCurrentMillis())
             .isArchived("N")
+            .isDeleted("N")
             .updatedBy(loggedUser.getId())
             .build();
         return slipRepository.save(slip);
@@ -94,5 +95,11 @@ public class SlipService extends CommonRepository {
         return slipItemsHbRepository.deleteSlipItems(id);
     }
 
+
+
+    public int deleteSlip(Map<String,Object> params,User loggedUser) {
+        Integer slipId = (Integer) params.get("id");
+        return  slipHbRepository.deleteSlip(slipId,loggedUser.getId());
+    }
 
 }
