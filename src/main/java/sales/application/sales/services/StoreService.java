@@ -24,22 +24,31 @@ import sales.application.sales.entities.StoreCategory;
 import sales.application.sales.entities.StoreSubCategory;
 import sales.application.sales.specifications.StoreSpecifications;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @Service
 public class StoreService extends CommonRepository {
 
+    private static final Logger logger = LoggerFactory.getLogger(StoreService.class);
+
     public Page<Map<String,Object>> getAllStores(SearchFilters searchFilters){
+        logger.info("Received request to get all stores with filters: {}", searchFilters);
         Pageable pageable = getPageable(searchFilters);
         String userZipCode = searchFilters.getZipCode();
         if(userZipCode == null || userZipCode.isEmpty()){
             userZipCode = "0";
         }
-        return storeRepository.findAllStore(pageable, searchFilters.getSearchKey(), userZipCode);
+        Page<Map<String, Object>> stores = storeRepository.findAllStore(pageable, searchFilters.getSearchKey(), userZipCode);
+        logger.info("Returning all stores with filters: {}", searchFilters);
+        return stores;
     }
 
 
     /** if you need more filters in future */
     public Page<Store> getAllStore(SearchFilters filters) {
+        logger.info("Received request to get all stores with filters: {}", filters);
         Specification<Store> specification = Specification.where(
                 (StoreSpecifications.containsName(filters.getSearchKey().trim())
                     .or(isCategoryName(filters.getSearchKey().trim()))
@@ -59,40 +68,59 @@ public class StoreService extends CommonRepository {
                 }
                 return Integer.MAX_VALUE;
             }));
-            return new PageImpl<>(storeList, pageable, stores.getTotalElements());
+            Page<Store> sortedStores = new PageImpl<>(storeList, pageable, stores.getTotalElements());
+            logger.info("Returning sorted stores with filters: {}", filters);
+            return sortedStores;
         }
 
+        logger.info("Returning stores with filters: {}", filters);
         return stores;
     }
 
     public Store findStoreBySlug(String slug){
-        return storeRepository.findStoreBySlug(slug);
+        logger.info("Received request to find store by slug: {}", slug);
+        Store store = storeRepository.findStoreBySlug(slug);
+        logger.info("Returning store for slug: {}", slug);
+        return store;
     }
 
     public String getStoreNameById(Integer storeId){
-        return storeRepository.getStoreNameById(storeId);
+        logger.info("Received request to get store name by ID: {}", storeId);
+        String storeName = storeRepository.getStoreNameById(storeId);
+        logger.info("Returning store name for ID: {}", storeId);
+        return storeName;
     }
 
 
     public List<StoreCategory> getAllStoreCategories(SearchFilters searchFilters) {
+        logger.info("Received request to get all store categories with filters: {}", searchFilters);
         Sort sort = Sort.by(searchFilters.getOrderBy());
            sort = searchFilters.getOrder().equals("asc") ? sort.ascending():sort.descending() ;
-        return storeCategoryRepository.findAll(sort);
+        List<StoreCategory> categories = storeCategoryRepository.findAll(sort);
+        logger.info("Returning all store categories with filters: {}", searchFilters);
+        return categories;
     }
 
     public List<StoreSubCategory> getAllStoreSubCategories(SearchFilters searchFilters) {
+        logger.info("Received request to get all store subcategories with filters: {}", searchFilters);
         Pageable pageable = getPageable(searchFilters);
+        List<StoreSubCategory> subCategories;
         if(searchFilters.getCategoryId() != null){
-            return storeSubCategoryRepository.getSubCategories(searchFilters.getCategoryId(),pageable);
+            subCategories = storeSubCategoryRepository.getSubCategories(searchFilters.getCategoryId(),pageable);
         }else {
-            return storeSubCategoryRepository.findAll(pageable).getContent();
+            subCategories = storeSubCategoryRepository.findAll(pageable).getContent();
         }
+        logger.info("Returning all store subcategories with filters: {}", searchFilters);
+        return subCategories;
     }
 
 
 
     public StoreSubCategory getStoreSubcategoryDetail(Integer subcategoryId) {
-        return storeSubCategoryRepository.findById(subcategoryId).get();
+        logger.info("Received request to get store subcategory detail for ID: {}", subcategoryId);
+        StoreSubCategory storeSubCategory = storeSubCategoryRepository.findById(subcategoryId).orElse(null);
+        logger.info("Returning store subcategory detail for ID: {}", subcategoryId);
+        return storeSubCategory;
     }
 
 

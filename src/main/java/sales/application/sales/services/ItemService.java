@@ -27,22 +27,30 @@ import sales.application.sales.entities.ItemCategory;
 import sales.application.sales.entities.ItemSubCategory;
 import sales.application.sales.entities.Store;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class ItemService extends CommonRepository {
 
+    private static final Logger logger = LoggerFactory.getLogger(ItemService.class);
+
     /** custom query */
     public Page<Map<String,Object>> getAllItems(SearchFilters searchFilters){
+        logger.info("Received request to get all items with filters: {}", searchFilters);
         Pageable pageable = getPageable(searchFilters);
         String userZipCode = searchFilters.getZipCode();
         if (userZipCode == null || userZipCode.isEmpty()) {
             userZipCode = "0";
         }
-        return itemRepository.findAllItem(pageable, userZipCode);
+        Page<Map<String, Object>> items = itemRepository.findAllItem(pageable, userZipCode);
+        logger.info("Returning items with filters: {}", searchFilters);
+        return items;
     }
 
 
     public Page<Item> getAllItem(ItemDto searchFilters) {
+        logger.info("Received request to get all items with filters: {}", searchFilters);
         System.err.println( "The zip code : " + searchFilters.getZipCode());
         Specification<Item> specification = Specification.where(
                 (containsName(searchFilters.getSearchKey().trim())
@@ -64,37 +72,54 @@ public class ItemService extends CommonRepository {
                 }
                 return Integer.MAX_VALUE;
             }));
-            return new PageImpl<>(itemList, pageable, items.getTotalElements());
+            logger.info("Items sorted by zip code: {}", searchFilters.getZipCode());
+            Page<Item> sortedItems = new PageImpl<>(itemList, pageable, items.getTotalElements());
+            logger.info("Returning sorted items with filters: {}", searchFilters);
+            return sortedItems;
         }
 
+        logger.info("Returning items with filters: {}", searchFilters);
         return items;
     }
 
     public List<ItemCategory> getAllItemCategories() {
+        logger.info("Received request to get all item categories.");
         Sort sort =  Sort.by("id").descending();
-        return itemCategoryRepository.findAll(sort);
+        List<ItemCategory> categories = itemCategoryRepository.findAll(sort);
+        logger.info("Returning all item categories.");
+        return categories;
     }
 
 
     public Item findItemBySLug(String slug){
-        return itemRepository.findItemBySlug(slug);
+        logger.info("Received request to find item by slug: {}", slug);
+        Item item = itemRepository.findItemBySlug(slug);
+        logger.info("Returning item for slug: {}", slug);
+        return item;
     }
 
 
 
     public List<ItemCategory> getAllItemsCategories(SearchFilters searchFilters) {
+        logger.info("Received request to get all item categories with filters: {}", searchFilters);
         Sort sort = Sort.by(searchFilters.getOrderBy());
         sort = searchFilters.getOrder().equals("asc") ? sort.ascending():sort.descending() ;
-        return itemCategoryRepository.findAll(sort);
+        List<ItemCategory> categories = itemCategoryRepository.findAll(sort);
+        logger.info("Returning all item categories with filters: {}", searchFilters);
+        return categories;
     }
 
     public List<ItemSubCategory> getAllItemsSubCategories(SearchFilters searchFilters) {
+        logger.info("Received request to get all item subcategories with filters: {}", searchFilters);
         Pageable pageable = getPageable(searchFilters);
+        List<ItemSubCategory> subCategories;
         if(searchFilters.getCategoryId() != null){
-            return itemSubCategoryRepository.getSubCategories(searchFilters.getCategoryId(),pageable);
+            subCategories = itemSubCategoryRepository.getSubCategories(searchFilters.getCategoryId(),pageable);
         }else {
-            return itemSubCategoryRepository.findAll(pageable).getContent();
+            subCategories = itemSubCategoryRepository.findAll(pageable).getContent();
         }
+        logger.info("Returning all item subcategories with filters: {}", searchFilters);
+        return subCategories;
     }
 
 }
