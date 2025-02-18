@@ -175,4 +175,9 @@ public class ItemCommentService extends  CommonRepository {
         return null;
     }
 
+    public int deleteCommentBySlug(String slug,User loggedUser){
+        itemCommentHbRepository.deleteComment(slug,loggedUser.getId());
+        return 0;
+    }
+
 }

@@ -153,4 +153,13 @@ public class ItemCommentHbRepository {
     }
 
 
+    public int deleteComment(String slug,Integer userId){
+        String hql = "update ItemComment set isDeleted='Y', updatedAt=:updatedAt where slug=:slug and userId=:userId";
+        Query query = entityManager.createQuery(hql);
+        query.setParameter("updatedAt",Utils.getCurrentMillis());
+        query.setParameter("slug",slug);
+        query.setParameter("userId",userId);
+        return query.executeUpdate();
+    }
+
 }

@@ -68,6 +68,21 @@ public class ItemCommentController extends CommonService {
         return new ResponseEntity<>(responseObj,HttpStatus.valueOf((Integer) responseObj.get("status")));
     }
 
+    @PostMapping("delete/{commentSlug}")
+    public ResponseEntity<Map<String,Object>> deleteCommentBySlug(HttpServletRequest request , @PathVariable("commentSlug") String commentSlug){
+        User loggedUser = (User) request.getAttribute("user");
+        Map<String,Object> responseObj = new HashMap<>();
+        int deleted = itemCommentService.deleteCommentBySlug(commentSlug, loggedUser);
+        if(deleted > 0){
+            responseObj.put("message","Message deleted successfully.");
+            responseObj.put("status",200);
+        }else {
+            responseObj.put("message","No record found.");
+            responseObj.put("status",404);
+        }
+        return new ResponseEntity<>(responseObj,HttpStatus.valueOf((Integer) responseObj.get("status")));
+    }
+
 
 
 }
