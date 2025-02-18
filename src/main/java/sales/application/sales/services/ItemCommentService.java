@@ -80,19 +80,20 @@ public class ItemCommentService extends CommonRepository {
                 return responseObj;
             }
         } else {
-            ItemComment itemComments = new ItemComment();
-            itemComments.setItemId(itemCommentsDto.getItemId());
-            itemComments.setMessage(itemCommentsDto.getMessage());
-            itemComments.setParentId(itemCommentsDto.getParentId());
-            itemComments.setParentId(itemCommentsDto.getParentId());
-            itemComments.setUser(loggedUser);
-            itemComments.setCreatedAt(Utils.getCurrentMillis());
-            itemComments.setUpdatedAt(Utils.getCurrentMillis());
-            itemComments = itemCommentRepository.save(itemComments);
-            if (itemComments.getId() > 0) {
+            ItemComment itemComment = new ItemComment();
+            itemComment.setItemId(itemCommentsDto.getItemId());
+            itemComment.setMessage(itemCommentsDto.getMessage());
+            itemComment.setParentId(itemCommentsDto.getParentId());
+            itemComment.setParentId(itemCommentsDto.getParentId());
+            itemComment.setUser(loggedUser);
+            itemComment.setCreatedAt(Utils.getCurrentMillis());
+            itemComment.setUpdatedAt(Utils.getCurrentMillis());
+            itemComment = itemCommentRepository.save(itemComment);
+            if (itemComment.getId() > 0) {
+                responseObj.put("res",itemComment);
                 responseObj.put("message", "Comment successfully saved.");
                 responseObj.put("status", 200);
-                logger.info("Comment with ID {} saved successfully.", itemComments.getId());
+                logger.info("Comment with ID {} saved successfully.", itemComment.getId());
                 return responseObj;
             }
         }
