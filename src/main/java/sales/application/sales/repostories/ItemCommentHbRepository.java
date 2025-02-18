@@ -14,6 +14,7 @@ import sales.application.sales.dto.ItemCommentsDto;
 import sales.application.sales.entities.CommentDislikes;
 import sales.application.sales.entities.CommentLikes;
 import sales.application.sales.entities.ItemComment;
+import sales.application.sales.entities.User;
 import sales.application.sales.utilities.Utils;
 
 import java.util.List;
@@ -153,12 +154,12 @@ public class ItemCommentHbRepository {
     }
 
 
-    public int deleteComment(String slug,Integer userId){
-        String hql = "update ItemComment set isDeleted='Y', updatedAt=:updatedAt where slug=:slug and userId=:userId";
+    public int deleteComment(String slug, User loggedUser){
+        String hql = "update ItemComment set isDeleted='Y', updatedAt=:updatedAt where slug=:slug and user=:user";
         Query query = entityManager.createQuery(hql);
         query.setParameter("updatedAt",Utils.getCurrentMillis());
         query.setParameter("slug",slug);
-        query.setParameter("userId",userId);
+        query.setParameter("user",loggedUser);
         return query.executeUpdate();
     }
 
