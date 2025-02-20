@@ -63,6 +63,7 @@ public class ItemCommentService extends CommonRepository {
         ItemComment itemComment = itemCommentRepository.findItemCommentBySlug(slug);
         if (loggedUser != null) {
             itemComment.setIsLiked(itemCommentHbRepository.isYouLiked(itemComment.getId(), loggedUser.getId()));
+            itemComment.setRepliesCount(itemCommentRepository.totalReplies(itemComment.getId()));
         }
         return itemComment;
     }
