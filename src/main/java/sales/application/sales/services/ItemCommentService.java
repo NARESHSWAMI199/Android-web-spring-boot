@@ -5,12 +5,14 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.embedded.jetty.JettyWebServer;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import sales.application.sales.dto.ItemCommentsDto;
+import sales.application.sales.entities.Item;
 import sales.application.sales.entities.ItemComment;
 import sales.application.sales.entities.User;
 import sales.application.sales.jwtUtils.JwtToken;
@@ -34,7 +36,7 @@ public class ItemCommentService extends CommonRepository {
     @Autowired
     JwtToken jwtToken;
 
-    public Map<String,Object> getAllItemComment(ItemCommentsDto filters, User loggedUser) {
+    public Page<ItemComment> getAllItemComment(ItemCommentsDto filters, User loggedUser) {
         logger.info("Received request to get all item comments with filters: {}", filters);
         Map<String,Object> map = new HashMap<>();
         Specification<ItemComment> specification = Specification.where(
@@ -53,9 +55,7 @@ public class ItemCommentService extends CommonRepository {
                 comment.setIsDisliked(itemCommentHbRepository.isYouDisliked(comment.getId(), loggedUser.getId()));
             }
         }
-        map.put("content", content);
-        map.put("totalElements", itemComments.getTotalElements());
-        return map;
+        return new PageImpl<>(content,pageable,itemComments.getTotalElements());
     }
 
     public ItemComment findItemCommentBySlug(String slug, User loggedUser) {

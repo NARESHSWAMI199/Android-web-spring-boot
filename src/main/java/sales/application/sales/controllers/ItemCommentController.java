@@ -4,6 +4,7 @@ package sales.application.sales.controllers;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ public class ItemCommentController extends CommonService {
     private static final Logger logger = LoggerFactory.getLogger(ItemCommentController.class);
 
     @PostMapping("all")
-    public ResponseEntity<Map<String,Object>> getAllUsers(@RequestBody ItemCommentsDto itemCommentsFilterDto, HttpServletRequest request) {
+    public ResponseEntity<Page<ItemComment>> getAllUsers(@RequestBody ItemCommentsDto itemCommentsFilterDto, HttpServletRequest request) {
         logger.info("Received request to get all comments with filters: {}", itemCommentsFilterDto);
         User loggedUser = null;
         try {
@@ -36,7 +37,7 @@ public class ItemCommentController extends CommonService {
         }catch (ExpiredJwtException ex){
             logger.info("session expired.");
         }
-        Map<String,Object> comments =  itemCommentService.getAllItemComment(itemCommentsFilterDto,loggedUser);
+        Page<ItemComment> comments =  itemCommentService.getAllItemComment(itemCommentsFilterDto,loggedUser);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
