@@ -27,6 +27,12 @@ public class StoreRating {
     @Column(name = "rating")
     Integer rating;
 
+    @Column(name = "created_at")
+    Long createdAt;
+
+    @Column(name = "updated_at")
+    Long updatedAt;
+
 
 
 }

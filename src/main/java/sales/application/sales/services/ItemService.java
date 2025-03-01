@@ -126,7 +126,7 @@ public class ItemService extends CommonRepository {
     @Transactional
     // handling here user's given ratings to items
     public int updateRatings(RatingDto ratingDto, User loggedUser){
-        return itemHbRepository.updateItemRatings(ratingDto,loggedUser);
+        return storeHbRepository.updateStoreRatings(ratingDto,loggedUser);
     }
 
 }

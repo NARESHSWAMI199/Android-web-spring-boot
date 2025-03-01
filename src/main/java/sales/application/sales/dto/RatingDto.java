@@ -10,4 +10,5 @@ import lombok.*;
 public class RatingDto {
     Integer itemId;
     Integer rating=0;
+    Integer storeId;
 }

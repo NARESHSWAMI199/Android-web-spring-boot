@@ -86,7 +86,7 @@ public class ItemController extends CommonService {
         logger.info("Going to update or item ratings : {} ",ratingDto);
         User loggedUser = (User) request.getAttribute("user");
         Map<String,Object> result = new HashMap<>();
-        int updated = itemService.updateRatings(ratingDto, loggedUser);
+        int updated = storeService.updateRatings(ratingDto, loggedUser);
         if(updated > 0){
             result.put("message","Your ratings successfully updated.");
             result.put("status",201);

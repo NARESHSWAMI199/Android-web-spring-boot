@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Comparator;
 import java.util.ArrayList;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,10 +19,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import sales.application.sales.dto.RatingDto;
 import sales.application.sales.dto.SearchFilters;
 import sales.application.sales.entities.Store;
 import sales.application.sales.entities.StoreCategory;
 import sales.application.sales.entities.StoreSubCategory;
+import sales.application.sales.entities.User;
 import sales.application.sales.specifications.StoreSpecifications;
 
 import org.slf4j.Logger;
@@ -121,6 +124,12 @@ public class StoreService extends CommonRepository {
         StoreSubCategory storeSubCategory = storeSubCategoryRepository.findById(subcategoryId).orElse(null);
         logger.info("Returning store subcategory detail for ID: {}", subcategoryId);
         return storeSubCategory;
+    }
+
+    @Transactional
+    // handling here user's given ratings to items
+    public int updateRatings(RatingDto ratingDto, User loggedUser){
+        return itemHbRepository.updateItemRatings(ratingDto,loggedUser);
     }
 
 

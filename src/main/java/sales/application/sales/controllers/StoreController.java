@@ -1,6 +1,8 @@
 package sales.application.sales.controllers;
 
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -8,13 +10,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.*;
+import sales.application.sales.dto.RatingDto;
 import sales.application.sales.dto.SearchFilters;
 import sales.application.sales.dto.StoreDto;
-import sales.application.sales.entities.ItemCategory;
-import sales.application.sales.entities.Store;
-import sales.application.sales.entities.StoreCategory;
-import sales.application.sales.entities.StoreSubCategory;
+import sales.application.sales.entities.*;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -93,7 +94,29 @@ public class StoreController extends CommonService {
 
 
 
-
+    @PostMapping("update/ratings")
+    @Transactional
+    public ResponseEntity<Map<String,Object>> handleItemRatings(@RequestBody RatingDto ratingDto, HttpServletRequest request){
+        logger.info("Going to update or store ratings : {} ",ratingDto);
+        User loggedUser = (User) request.getAttribute("user");
+        Map<String,Object> result = new HashMap<>();
+        int updated = itemService.updateRatings(ratingDto, loggedUser);
+        if(updated > 0){
+            result.put("message","Your ratings successfully updated.");
+            result.put("status",201);
+            logger.info("Store ratings successfully updated.");
+        }else{
+            result.put("message","No record found to update.");
+            result.put("status",404);
+            logger.info("No record found to update");
+            try {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            }catch (Exception e){
+                logger.error("facing err during rollback store ratings : {} ",e.getMessage());
+            }
+        }
+        return new ResponseEntity<>(result,HttpStatus.valueOf((Integer) result.get("status")));
+    }
 
 
 }
