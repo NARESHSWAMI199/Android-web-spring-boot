@@ -83,7 +83,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(value = {FileNotFoundException.class})
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public ErrorDto fileNotFound(FileNotFoundException ex, WebRequest webRequest) {
-        logger.error("FileNotFoundException: {}", ex.getMessage(), ex);
+        logger.error("FileNotFoundException: {}", ex.getMessage());
         ErrorDto message = new ErrorDto("File not found.", 400);
         return message;
     }

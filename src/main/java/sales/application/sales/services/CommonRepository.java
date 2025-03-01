@@ -23,6 +23,9 @@ public class CommonRepository{
     ItemRepository itemRepository;
 
     @Autowired
+    ItemHbRepository itemHbRepository;
+
+    @Autowired
     StoreHbRepository storeHbRepository;
 
     @Autowired
@@ -62,6 +65,12 @@ public class CommonRepository{
 
     @Autowired
     protected SlipItemsHbRepository slipItemsHbRepository;
+
+    @Autowired
+    protected StoreRatingsRepository storeRatingsRepository;
+
+    @Autowired
+    protected ItemRatingsRepository itemRatingsRepository;
 
 
     public Pageable getPageable(SearchFilters searchFilters) {

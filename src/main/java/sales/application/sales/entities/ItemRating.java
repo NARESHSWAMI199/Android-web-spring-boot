@@ -8,21 +8,25 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "comment_dislikes")
+@Table(name = "item_ratings")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class CommentDislikes {
-
+@NoArgsConstructor
+public class ItemRating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    long id ;
+
+    @Column(name = "item_id")
+    Integer itemId;
 
     @Column(name = "user_id")
     Integer userId;
 
-    @Column(name = "item_comment_id")
-    Integer itemCommentId;
+    @Column(name = "rating")
+    Integer rating;
+
+
 
 }

@@ -2,8 +2,13 @@ package sales.application.sales.controllers;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,10 +27,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import sales.application.sales.dto.ItemDto;
+import sales.application.sales.dto.RatingDto;
 import sales.application.sales.dto.SearchFilters;
 import sales.application.sales.entities.Item;
 import sales.application.sales.entities.ItemCategory;
 import sales.application.sales.entities.ItemSubCategory;
+import sales.application.sales.entities.User;
 
 @RestController
 @RequestMapping("item")
@@ -70,4 +78,32 @@ public class ItemController extends CommonService {
         List<ItemSubCategory> storeSubCategories = itemService.getAllItemsSubCategories(searchFilters);
         return new ResponseEntity<>(storeSubCategories, HttpStatus.OK);
     }
+
+
+    @PostMapping("update/ratings")
+    @Transactional
+    public ResponseEntity<Map<String,Object>> handleItemRatings(@RequestBody RatingDto ratingDto, HttpServletRequest request){
+        logger.info("Going to update or item ratings : {} ",ratingDto);
+        User loggedUser = (User) request.getAttribute("user");
+        Map<String,Object> result = new HashMap<>();
+        int updated = itemService.updateRatings(ratingDto, loggedUser);
+        if(updated > 0){
+            result.put("message","Your ratings successfully updated.");
+            result.put("status",201);
+            logger.info("Item ratings successfully updated.");
+        }else{
+            result.put("message","No record found to update.");
+            result.put("status",404);
+            logger.info("No record found to update");
+            try {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            }catch (Exception e){
+                logger.error("facing err during rollback item ratings : {} ",e.getMessage());
+            }
+        }
+        return new ResponseEntity<>(result,HttpStatus.valueOf((Integer) result.get("status")));
+    }
+
+
+
 }

@@ -23,7 +23,11 @@ public class SalesWebMvcConfigurer implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         String[] excludedPaths = {
                 "/store/**",
-                "/item/**",
+                "/item/all",
+                "/item/detail/**",
+                "/item/image/**",
+                "/item/categories",
+                "/item/subcategory",
                 "/swagger-ui/**",
                 "/v3/api-docs/**",
                 "/api-docs/**",
