@@ -80,14 +80,23 @@ public class ItemController extends CommonService {
     }
 
 
+    @GetMapping("ratings/{itemSlug}")
+    public ResponseEntity<Map<String,Object>> getRatingCountByItemSlug(@PathVariable("itemSlug") String itemSlug) {
+        Map<String,Object> result = new HashMap<>();
+        Long ratingCount = itemService.getRatingCountByItemSlug(itemSlug);
+        result.put("totalRating",ratingCount);
+        return new ResponseEntity<>(result,HttpStatus.valueOf(200));
+    }
+
     @PostMapping("update/ratings")
     @Transactional
     public ResponseEntity<Map<String,Object>> handleItemRatings(@RequestBody RatingDto ratingDto, HttpServletRequest request){
         logger.info("Going to update or item ratings : {} ",ratingDto);
         User loggedUser = (User) request.getAttribute("user");
         Map<String,Object> result = new HashMap<>();
-        int updated = storeService.updateRatings(ratingDto, loggedUser);
-        if(updated > 0){
+        float ratingAvg = storeService.updateRatings(ratingDto, loggedUser);
+        if(ratingAvg > 0){
+            result.put("ratingAvg",ratingAvg);
             result.put("message","Your ratings successfully updated.");
             result.put("status",201);
             logger.info("Item ratings successfully updated.");

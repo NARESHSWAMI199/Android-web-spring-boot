@@ -37,4 +37,8 @@ public Page<Map<String, Object>> findAllItem(Pageable pageable, String userZipCo
 
 
     Item findItemBySlug(String slug);
+
+    @Query(value = "select id from Item where slug=:slug")
+    Integer getItemIdByItemSlug(String slug);
+
 }

@@ -25,6 +25,7 @@ import sales.application.sales.entities.Store;
 import sales.application.sales.entities.StoreCategory;
 import sales.application.sales.entities.StoreSubCategory;
 import sales.application.sales.entities.User;
+import sales.application.sales.exceptions.NotFoundException;
 import sales.application.sales.specifications.StoreSpecifications;
 
 import org.slf4j.Logger;
@@ -128,8 +129,15 @@ public class StoreService extends CommonRepository {
 
     @Transactional
     // handling here user's given ratings to items
-    public int updateRatings(RatingDto ratingDto, User loggedUser){
+    public Float updateRatings(RatingDto ratingDto, User loggedUser){
         return itemHbRepository.updateItemRatings(ratingDto,loggedUser);
+    }
+
+
+    public Long getRatingCountByStoreSlug(String storeSlug){
+        Integer storeId = storeRepository.getStoreIdByItemSlug(storeSlug);
+        if(storeId == null) throw new NotFoundException("Not a valid item slug.");
+        return storeHbRepository.getRatingCountByStoreId(storeId);
     }
 
 

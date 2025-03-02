@@ -35,7 +35,7 @@ public class StoreHbRepository {
 
 
 
-    public int updateStoreRatings(RatingDto ratingDto, User loggedUser){
+    public Float updateStoreRatings(RatingDto ratingDto, User loggedUser){
         Integer storeId = ratingDto.getStoreId();
         if(storeId == null || storeId == 0) throw new IllegalArgumentException("Store id can't be 0 or null.");
         String hql = "update StoreRating set rating=:rating,updatedAt=:updatedAt where userId=:userId and storeId=:storeId";
@@ -68,7 +68,11 @@ public class StoreHbRepository {
         Query storeUpdateQuery = entityManager.createQuery(storeHql);
         storeUpdateQuery.setParameter("storeId",storeId);
         storeUpdateQuery.setParameter("ratingAvg",ratingAvg);
-        return storeUpdateQuery.executeUpdate();
+        int isItemUpdated =  storeUpdateQuery.executeUpdate();
+        if(isItemUpdated > 0){
+            return ratingAvg;
+        }
+        return 0f;
     }
 
 
@@ -83,4 +87,16 @@ public class StoreHbRepository {
         query.setParameter("storeId" , storeId);
         return ((Long) query.getSingleResult()).floatValue();
     }
+
+    public Long getRatingCountByStoreId(Integer storeId){
+        String hql = """
+            select 
+                count(rating) as total_rating from StoreRating
+            where storeId= :storeId 
+         """;
+        Query query = entityManager.createQuery(hql);
+        query.setParameter("storeId" , storeId);
+        return (Long) query.getSingleResult();
+    }
+
 }

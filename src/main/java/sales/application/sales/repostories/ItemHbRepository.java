@@ -21,7 +21,7 @@ public class ItemHbRepository {
     @Autowired
     EntityManager entityManager;
 
-    public int updateItemRatings(RatingDto ratingDto, User loggedUser){
+    public Float updateItemRatings(RatingDto ratingDto, User loggedUser){
         Integer itemId = ratingDto.getItemId();
         if(itemId == null || itemId == 0) throw new IllegalArgumentException("Item id can't be 0 or null.");
         String hql = "update ItemRating set rating=:rating,updatedAt=:updatedAt where userId=:userId and itemId=:itemId";
@@ -54,7 +54,11 @@ public class ItemHbRepository {
         Query itemUpdateQuery = entityManager.createQuery(itemHql);
         itemUpdateQuery.setParameter("itemId",itemId);
         itemUpdateQuery.setParameter("ratingAvg",ratingAvg);
-        return itemUpdateQuery.executeUpdate();
+        int isItemUpdated = itemUpdateQuery.executeUpdate();
+        if(isItemUpdated > 0){
+            return ratingAvg;
+        }
+        return  0f;
     }
 
 
@@ -68,6 +72,18 @@ public class ItemHbRepository {
         Query query = entityManager.createQuery(hql);
         query.setParameter("itemId" , itemId);
         return ((Long) query.getSingleResult()).floatValue();
+    }
+
+
+    public Long getRatingCountByItemId(Integer itemId){
+        String hql = """
+            select 
+                count(rating) as total_rating from ItemRating
+            where itemId= :itemId 
+         """;
+        Query query = entityManager.createQuery(hql);
+        query.setParameter("itemId" , itemId);
+        return (Long) query.getSingleResult();
     }
 
 }

@@ -49,4 +49,7 @@ public interface StoreRepository extends JpaRepository<Store,Integer>, JpaSpecif
     String getStoreNameById(@Param("id") Integer id);
 
 
+    @Query(value = "select id from Store where slug=:slug")
+    Integer getStoreIdByItemSlug(String slug);
+
 }

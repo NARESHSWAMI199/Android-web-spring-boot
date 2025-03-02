@@ -28,6 +28,7 @@ import sales.application.sales.entities.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sales.application.sales.exceptions.NotFoundException;
 
 @Service
 public class ItemService extends CommonRepository {
@@ -99,6 +100,7 @@ public class ItemService extends CommonRepository {
 
 
 
+
     public List<ItemCategory> getAllItemsCategories(SearchFilters searchFilters) {
         logger.info("Received request to get all item categories with filters: {}", searchFilters);
         Sort sort = Sort.by(searchFilters.getOrderBy());
@@ -125,8 +127,14 @@ public class ItemService extends CommonRepository {
 
     @Transactional
     // handling here user's given ratings to items
-    public int updateRatings(RatingDto ratingDto, User loggedUser){
+    public Float updateRatings(RatingDto ratingDto, User loggedUser){
         return storeHbRepository.updateStoreRatings(ratingDto,loggedUser);
+    }
+
+    public Long getRatingCountByItemSlug(String itemSlug){
+        Integer itemId = itemRepository.getItemIdByItemSlug(itemSlug);
+        if(itemId == null) throw new NotFoundException("Not a valid item slug.");
+        return itemHbRepository.getRatingCountByItemId(itemId);
     }
 
 }
