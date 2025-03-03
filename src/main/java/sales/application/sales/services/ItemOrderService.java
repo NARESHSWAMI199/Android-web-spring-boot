@@ -119,7 +119,7 @@ public class ItemOrderService  extends CommonRepository {
         document.add(heading);
 
 
-        PdfPTable table = new PdfPTable(11);
+        PdfPTable table = new PdfPTable(6);
         addTableHeader(table);
         addRows(table,slipItems);
         document.add(table);
@@ -132,8 +132,6 @@ public class ItemOrderService  extends CommonRepository {
                 .forEach(columnTitle -> {
                     PdfPCell header = new PdfPCell();
                     if(columnTitle.equals("Item")){
-                        header.setColspan(3);
-                    }else {
                         header.setColspan(2);
                     }
                     header.setBackgroundColor(BaseColor.LIGHT_GRAY);
@@ -150,15 +148,16 @@ public class ItemOrderService  extends CommonRepository {
             ItemOrder itemOrder = slipItems.getItemOrder();
             if (itemOrder != null) {
                 Item item = itemOrder.getItem();
-                String itemPrice = (item.getPrice() - item.getDiscount()) * 4 + "";
+                int quantity = itemOrder.getQuantity();
+                String itemPrice = (item.getPrice() - item.getDiscount()) * quantity + "";
                 // Item Name take three columns
                 PdfPCell itemNameCell = new PdfPCell(new Paragraph(item.getName()));
-                itemNameCell.setColspan(3);
+                itemNameCell.setColspan(2);
                 table.addCell(itemNameCell);
                 // -- end Item name block
-                table.addCell(item.getPrice() + " x "+ itemOrder.getQuantity());
-                table.addCell((item.getPrice() * 4) + "");
-                table.addCell((item.getDiscount() * 4) + "");
+                table.addCell(item.getPrice() + " x "+ quantity);
+                table.addCell((item.getPrice() * quantity) + "");
+                table.addCell((item.getDiscount() * quantity) + "");
                 table.addCell(itemPrice);
                 totalPrice += Float.valueOf(itemPrice);
             }
@@ -166,13 +165,13 @@ public class ItemOrderService  extends CommonRepository {
 
             // Add cells with varying spans (flex-like behavior)
             PdfPCell cell1 = new PdfPCell(new Paragraph("Total"));
-            cell1.setColspan(4);
+            cell1.setColspan(3);
             cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell1);
 
             PdfPCell cell2 = new PdfPCell(new Paragraph(totalPrice+""));
             cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell2.setColspan(2);
+            cell2.setColspan(3);
 
             table.addCell(cell2);
 
