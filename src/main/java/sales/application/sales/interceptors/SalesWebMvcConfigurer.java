@@ -39,6 +39,7 @@ public class SalesWebMvcConfigurer implements WebMvcConfigurer {
                 "/item/subcategory",
                 "/item/subcategory/**",
                 "/item/ratings/**",
+                "/slips/pdf/**",
                 "/swagger-ui/**",
                 "/v3/api-docs/**",
                 "/api-docs/**",

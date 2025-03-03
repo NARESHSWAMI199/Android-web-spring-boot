@@ -1,5 +1,6 @@
 package sales.application.sales.controllers;
 
+import com.itextpdf.text.DocumentException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,8 @@ import sales.application.sales.entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileNotFoundException;
+import java.rmi.NoSuchObjectException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,5 +97,19 @@ public class SlipController extends CommonService {
 
         return new ResponseEntity<>(result, HttpStatus.valueOf((Integer) result.get("status")));
     }
+
+
+    @GetMapping("pdf/{slipId}")
+    public ResponseEntity<Map<String,Object>> getSlipPdf(@PathVariable Integer slipId) throws DocumentException, FileNotFoundException, NoSuchObjectException {
+        Map<String,Object> result = new HashMap<>();
+        itemOrderService.createSlipPdf(slipId);
+        result.put("message","Successfully created.");
+        return new ResponseEntity<>(result,HttpStatus.OK);
+    }
+
+
+
+
+
 }
  

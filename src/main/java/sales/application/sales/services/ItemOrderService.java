@@ -1,7 +1,12 @@
 package sales.application.sales.services;
 
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.transaction.Transactional;
+import jdk.jshell.execution.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,9 +21,14 @@ import sales.application.sales.utilities.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.rmi.NoSuchObjectException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 public class ItemOrderService  extends CommonRepository {
@@ -88,6 +98,85 @@ public class ItemOrderService  extends CommonRepository {
        boolean result = isUpdated > 0;
        logger.info("Item order ID {} saved in slip ID {}: {}", itemOrderId, slipId, result);
        return result;
+    }
+
+
+
+    public void createSlipPdf(Integer slipId) throws FileNotFoundException, DocumentException, NoSuchObjectException {
+        Document document = new Document();
+        Slip slip = slipService.findSlipById(slipId);
+        if(slip == null) throw new NoSuchObjectException("No slip found.");
+        String slipName = Utils.toTitleCase(slip.getSlipName());
+        PdfWriter.getInstance(document, new FileOutputStream("iTextTable.pdf"));
+        List<SlipItems> slipItems = slipItemsRepository.findBySlipId(slipId);
+        document.open();
+
+        // Heading
+        Font headingFont = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);
+        Paragraph heading = new Paragraph(slipName,headingFont);
+        heading.setAlignment(Element.ALIGN_CENTER);
+        heading.setSpacingAfter(20);
+        document.add(heading);
+
+
+        PdfPTable table = new PdfPTable(11);
+        addTableHeader(table);
+        addRows(table,slipItems);
+        document.add(table);
+        document.close();
+    }
+
+
+    private void addTableHeader(PdfPTable table) {
+        Stream.of("Item", "Quantity","Price","Discount","Total")
+                .forEach(columnTitle -> {
+                    PdfPCell header = new PdfPCell();
+                    if(columnTitle.equals("Item")){
+                        header.setColspan(3);
+                    }else {
+                        header.setColspan(2);
+                    }
+                    header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                    header.setBorderWidth(1);
+                    header.setPhrase(new Phrase(columnTitle));
+                    table.addCell(header);
+                });
+    }
+
+
+    private void addRows(PdfPTable table, List<SlipItems> slipItemsList) {
+        Float totalPrice = 0f;
+        for(SlipItems slipItems : slipItemsList) {
+            ItemOrder itemOrder = slipItems.getItemOrder();
+            if (itemOrder != null) {
+                Item item = itemOrder.getItem();
+                String itemPrice = (item.getPrice() - item.getDiscount()) * 4 + "";
+                // Item Name take three columns
+                PdfPCell itemNameCell = new PdfPCell(new Paragraph(item.getName()));
+                itemNameCell.setColspan(3);
+                table.addCell(itemNameCell);
+                // -- end Item name block
+                table.addCell(item.getPrice() + " x "+ itemOrder.getQuantity());
+                table.addCell((item.getPrice() * 4) + "");
+                table.addCell((item.getDiscount() * 4) + "");
+                table.addCell(itemPrice);
+                totalPrice += Float.valueOf(itemPrice);
+            }
+        }
+
+            // Add cells with varying spans (flex-like behavior)
+            PdfPCell cell1 = new PdfPCell(new Paragraph("Total"));
+            cell1.setColspan(4);
+            cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell1);
+
+            PdfPCell cell2 = new PdfPCell(new Paragraph(totalPrice+""));
+            cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell2.setColspan(2);
+
+            table.addCell(cell2);
+
+
     }
 
 

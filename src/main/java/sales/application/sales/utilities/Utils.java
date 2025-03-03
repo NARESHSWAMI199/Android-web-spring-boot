@@ -33,6 +33,12 @@ public class Utils {
         }
 
 
+        public static String toTitleCase(String value){
+            if(Utils.isEmpty(value)) return value;
+            return value.substring(0,1).toUpperCase() + value.substring(1,value.length());
+        }
+
+
         public static String aesEncrypt(String Data, String secretKey) {
             try {
                 Key key = new SecretKeySpec(secretKey.getBytes(), "AES");
