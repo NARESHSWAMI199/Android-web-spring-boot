@@ -23,7 +23,7 @@ import sales.application.sales.dto.ErrorDto;
 public class ExceptionAdvice {
 
     private static final Logger logger = LoggerFactory.getLogger(ExceptionAdvice.class);
-
+    @Transactional
     @ExceptionHandler(value = {NotFoundException.class})
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ErrorDto notFoundException(NotFoundException ex, WebRequest request) {
@@ -31,7 +31,7 @@ public class ExceptionAdvice {
         ErrorDto message = new ErrorDto(ex.getMessage(), 404);
         return message;
     }
-
+    @Transactional
     @ExceptionHandler(value = {ObjectNotFoundException.class})
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ErrorDto resourceNotFoundException(ObjectNotFoundException ex, WebRequest request) {
@@ -72,6 +72,7 @@ public class ExceptionAdvice {
         return err;
     }
 
+    @Transactional
     @ExceptionHandler(value = {HttpMessageNotReadableException.class})
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDto httpMessageNotReadableException(HttpMessageNotReadableException ex, WebRequest request) {
@@ -80,11 +81,12 @@ public class ExceptionAdvice {
         return message;
     }
 
+    @Transactional
     @ExceptionHandler(value = {FileNotFoundException.class})
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ErrorDto fileNotFound(FileNotFoundException ex, WebRequest webRequest) {
         logger.error("FileNotFoundException: {}", ex.getMessage());
-        ErrorDto message = new ErrorDto("File not found.", 400);
+        ErrorDto message = new ErrorDto("File not found.", 404);
         return message;
     }
 

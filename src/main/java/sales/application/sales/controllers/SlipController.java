@@ -2,8 +2,12 @@ package sales.application.sales.controllers;
 
 import com.itextpdf.text.DocumentException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sales.application.sales.dto.ItemOrderDto;
@@ -16,6 +20,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.rmi.NoSuchObjectException;
 import java.util.HashMap;
 import java.util.Map;
@@ -99,12 +106,17 @@ public class SlipController extends CommonService {
     }
 
 
+    @Value("${slips.get}")
+    String slipsRelativePath;
+
     @GetMapping("pdf/{slipId}")
-    public ResponseEntity<Map<String,Object>> getSlipPdf(@PathVariable Integer slipId) throws DocumentException, FileNotFoundException, NoSuchObjectException {
+    public ResponseEntity<Resource> getSlipPdf(@PathVariable Integer slipId) throws DocumentException, FileNotFoundException, NoSuchObjectException, MalformedURLException {
         Map<String,Object> result = new HashMap<>();
-        itemOrderService.createSlipPdf(slipId);
-        result.put("message","Successfully created.");
-        return new ResponseEntity<>(result,HttpStatus.OK);
+        String slipPdfPath = itemOrderService.createSlipPdf(slipId);
+        logger.info("Received request to get pdf file: {}", slipId);
+        Path path = Paths.get(slipPdfPath);
+        Resource resource = new UrlResource(path.toUri());
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF).body(resource);
     }
 
 

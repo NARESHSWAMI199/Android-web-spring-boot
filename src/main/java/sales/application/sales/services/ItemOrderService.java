@@ -8,6 +8,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.transaction.Transactional;
 import jdk.jshell.execution.Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import sales.application.sales.utilities.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.rmi.NoSuchObjectException;
@@ -102,12 +104,21 @@ public class ItemOrderService  extends CommonRepository {
 
 
 
-    public void createSlipPdf(Integer slipId) throws FileNotFoundException, DocumentException, NoSuchObjectException {
+    @Value("${slips.absolute}")
+    String slipsAbsoluteFolderPath;
+
+    public String createSlipPdf(Integer slipId) throws FileNotFoundException, DocumentException, NoSuchObjectException {
+        logger.info("Creating slips pdf {} of slip ID {}",slipId);
         Document document = new Document();
         Slip slip = slipService.findSlipById(slipId);
         if(slip == null) throw new NoSuchObjectException("No slip found.");
         String slipName = Utils.toTitleCase(slip.getSlipName());
-        PdfWriter.getInstance(document, new FileOutputStream("iTextTable.pdf"));
+        // if folder doesn't exist not created then create it
+        File slipsFolder = new File(slipsAbsoluteFolderPath+slipId);
+        if(!slipsFolder.exists()) slipsFolder.mkdirs();
+        String filePath = slipsAbsoluteFolderPath+slipId+File.separator+slipName+".pdf";
+        // slipsAbsoluteFolderPath must have '/' in last
+        PdfWriter.getInstance(document, new FileOutputStream(filePath));
         List<SlipItems> slipItems = slipItemsRepository.findBySlipId(slipId);
         document.open();
 
@@ -124,6 +135,8 @@ public class ItemOrderService  extends CommonRepository {
         addRows(table,slipItems);
         document.add(table);
         document.close();
+        logger.info("Pdf created successfully {} of slip ID {}",slipId);
+        return filePath;
     }
 
 

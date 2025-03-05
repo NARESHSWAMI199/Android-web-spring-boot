@@ -75,7 +75,6 @@ profile :
   #  absolute : /home/rohit/Documents/images/profiles/
   absolute : C:/Users/DATA/Documents/demo/sales-backend/src/main/resources/public/profiles/
   #  absolute  : /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/images/profiles/
-  relative :
   #  get :  /home/rohit/Documents/images/profiles/
   get : src/main/resources/public/profiles/
 
@@ -83,7 +82,6 @@ store :
   #  absolute : /home/rohit/Documents/images/stores/
   absolute : C:/Users/DATA/Documents/demo/sales-backend/src/main/resources/public/stores/
   #  absolute  : /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/images/stores/
-  relative :
   get : src/main/resources/public/stores/
 #  get : /home/rohit/Documents/images/stores/
 
@@ -91,6 +89,10 @@ item:
   #  absolute : /home/rohit/Documents/images/items/
   #  absolute: /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/images/items/
   absolute  : C:/Users/DATA/Documents/demo/sales-backend/src/main/resources/public/items/
-  relative:
   #  get : /home/rohit/Documents/images/items/
   get: src/main/resources/public/items/
+
+
+slips :
+  absolute : C:/Users/DATA/Documents/demo/android-backend/Android-web-spring-boot/src/main/resources/slips/
+  get : src/main/resources/slips/
