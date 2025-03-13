@@ -50,10 +50,13 @@ public class ItemHbRepository {
             insertItemRatingQuery.executeUpdate();
         }
         Float ratingAvg = getRatingAvg(itemId);
-        String itemHql = "update Item set rating=:ratingAvg where id=:itemId";
+        Integer totalRatings = getRatingCountByItemId(itemId).intValue();
+
+        String itemHql = "update Item set rating=:ratingAvg, totalRatingCount=:totalRatingCount where id=:itemId";
         Query itemUpdateQuery = entityManager.createQuery(itemHql);
         itemUpdateQuery.setParameter("itemId",itemId);
         itemUpdateQuery.setParameter("ratingAvg",ratingAvg);
+        itemUpdateQuery.setParameter("totalRatingCount",totalRatings);
         int isItemUpdated = itemUpdateQuery.executeUpdate();
         if(isItemUpdated > 0){
             return ratingAvg;

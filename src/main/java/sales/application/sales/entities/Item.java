@@ -55,7 +55,13 @@ public class Item implements Serializable {
     @Column(name = "avatar")
     String avatars;
     @Column(name = "rating")
-    float rating;
+    Float rating;
+    @Column(name = "total_rating_count")
+    Integer totalRatingCount;
+    @Column(name = "total_comments")
+    Integer totalComments;
+    @Column(name = "total_reports_count")
+    Integer totalReportsCount;
     @JsonIgnore
     @Column(name = "status")
     String status="A";
