@@ -23,6 +23,6 @@ public class CommentLikes {
     Integer userId;
 
     @Column(name = "item_comment_id")
-    Integer itemCommentId;
+    Integer ItemReviewId;
 
 }

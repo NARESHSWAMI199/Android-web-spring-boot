@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ItemCommentsDto extends SearchFilters{
+public class ItemReviewsDto extends SearchFilters{
     String message;
     Integer userId;
     String userSlug;

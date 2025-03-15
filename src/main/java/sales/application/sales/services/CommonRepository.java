@@ -43,10 +43,10 @@ public class CommonRepository{
     protected StoreSubCategoryRepository storeSubCategoryRepository;
 
     @Autowired
-    protected ItemCommentRepository itemCommentRepository;
+    protected ItemReviewRepository itemReviewRepository;
 
     @Autowired
-    protected ItemCommentHbRepository itemCommentHbRepository;
+    protected ItemReviewHbRepository itemReviewHbRepository;
 
     @Autowired
     protected SlipRepository slipRepository;

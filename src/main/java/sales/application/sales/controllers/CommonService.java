@@ -23,7 +23,7 @@ public class CommonService {
     protected Logger logger;
 
     @Autowired
-    protected ItemCommentService itemCommentService;
+    protected ItemReviewService itemReviewService;
 
     @Autowired
     protected SlipService slipService;

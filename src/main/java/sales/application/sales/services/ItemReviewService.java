@@ -11,14 +11,14 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import sales.application.sales.dto.ItemCommentsDto;
+import sales.application.sales.dto.ItemReviewsDto;
 import sales.application.sales.entities.Item;
-import sales.application.sales.entities.ItemComment;
+import sales.application.sales.entities.ItemReview;
 import sales.application.sales.entities.User;
 import sales.application.sales.jwtUtils.JwtToken;
 import sales.application.sales.utilities.Utils;
 
-import static sales.application.sales.specifications.ItemCommentSpecification.*;
+import static sales.application.sales.specifications.ItemReviewSpecification.*;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -29,101 +29,101 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Service
-public class ItemCommentService extends CommonRepository {
+public class ItemReviewService extends CommonRepository {
 
-    private static final Logger logger = LoggerFactory.getLogger(ItemCommentService.class);
+    private static final Logger logger = LoggerFactory.getLogger(ItemReviewService.class);
 
     @Autowired
     JwtToken jwtToken;
 
-    public Page<ItemComment> getAllItemComment(ItemCommentsDto filters, User loggedUser) {
+    public Page<ItemReview> getAllItemReview(ItemReviewsDto filters, User loggedUser) {
         logger.info("Received request to get all item comments with filters: {}", filters);
         Map<String,Object> map = new HashMap<>();
-        Specification<ItemComment> specification = Specification.where(
+        Specification<ItemReview> specification = Specification.where(
                 (containsName(filters.getSearchKey()))
                         .and(hasSlug(filters.getCommentSlug()))
                         .and(isItemId(filters.getItemId()))
                         .and(isParentComment(filters.getParentId()))
         );
         Pageable pageable = getPageable(filters);
-        Page<ItemComment> itemComments = itemCommentRepository.findAll(specification, pageable);
-        List<ItemComment> content = itemComments.getContent();
-        for (ItemComment comment : content) {
-            comment.setRepliesCount(itemCommentRepository.totalReplies(comment.getId()));
+        Page<ItemReview> ItemReviews = itemReviewRepository.findAll(specification, pageable);
+        List<ItemReview> content = ItemReviews.getContent();
+        for (ItemReview comment : content) {
+            comment.setRepliesCount(itemReviewRepository.totalReplies(comment.getId()));
             if (loggedUser != null) {
-                comment.setIsLiked(itemCommentHbRepository.isYouLiked(comment.getId(), loggedUser.getId()));
-                comment.setIsDisliked(itemCommentHbRepository.isYouDisliked(comment.getId(), loggedUser.getId()));
+                comment.setIsLiked(itemReviewHbRepository.isYouLiked(comment.getId(), loggedUser.getId()));
+                comment.setIsDisliked(itemReviewHbRepository.isYouDisliked(comment.getId(), loggedUser.getId()));
             }
         }
-        return new PageImpl<>(content,pageable,itemComments.getTotalElements());
+        return new PageImpl<>(content,pageable,ItemReviews.getTotalElements());
     }
 
-    public ItemComment findItemCommentBySlug(String slug, User loggedUser) {
+    public ItemReview findItemReviewBySlug(String slug, User loggedUser) {
         logger.info("Received request to find item comment by slug: {}", slug);
-        ItemComment itemComment = itemCommentRepository.findItemCommentBySlug(slug);
+        ItemReview ItemReview = itemReviewRepository.findItemReviewBySlug(slug);
         if (loggedUser != null) {
-            itemComment.setIsLiked(itemCommentHbRepository.isYouLiked(itemComment.getId(), loggedUser.getId()));
-            itemComment.setRepliesCount(itemCommentRepository.totalReplies(itemComment.getId()));
+            ItemReview.setIsLiked(itemReviewHbRepository.isYouLiked(ItemReview.getId(), loggedUser.getId()));
+            ItemReview.setRepliesCount(itemReviewRepository.totalReplies(ItemReview.getId()));
         }
-        return itemComment;
+        return ItemReview;
     }
 
     @Transactional
-    public Map<String,Object> addOrUpdateComment(ItemCommentsDto itemCommentsDto, User loggedUser) {
-        logger.info("Received request to add/update comment: {}", itemCommentsDto);
+    public Map<String,Object> addOrUpdateComment(ItemReviewsDto ItemReviewsDto, User loggedUser) {
+        logger.info("Received request to add/update comment: {}", ItemReviewsDto);
         Map<String,Object> responseObj = new HashMap<>();
-        if (!Utils.isEmpty(itemCommentsDto.getCommentSlug())) {
-            int isUpdated = itemCommentHbRepository.updateComment(itemCommentsDto);
+        if (!Utils.isEmpty(ItemReviewsDto.getCommentSlug())) {
+            int isUpdated = itemReviewHbRepository.updateComment(ItemReviewsDto);
             if (isUpdated > 0) {
                 responseObj.put("message", "Comment successfully updated.");
                 responseObj.put("status", 201);
-                logger.info("Comment with slug {} updated successfully.", itemCommentsDto.getCommentSlug());
+                logger.info("Comment with slug {} updated successfully.", ItemReviewsDto.getCommentSlug());
                 return responseObj;
             }
         } else {
-            ItemComment itemComment = new ItemComment();
-            itemComment.setItemId(itemCommentsDto.getItemId());
-            itemComment.setMessage(itemCommentsDto.getMessage());
-            itemComment.setParentId(itemCommentsDto.getParentId());
-            itemComment.setParentId(itemCommentsDto.getParentId());
-            itemComment.setUser(loggedUser);
-            itemComment.setCreatedAt(Utils.getCurrentMillis());
-            itemComment.setUpdatedAt(Utils.getCurrentMillis());
-            itemComment = itemCommentRepository.save(itemComment);
-            if (itemComment.getId() > 0) {
-                responseObj.put("res",itemComment);
+            ItemReview ItemReview = new ItemReview();
+            ItemReview.setItemId(ItemReviewsDto.getItemId());
+            ItemReview.setMessage(ItemReviewsDto.getMessage());
+            ItemReview.setParentId(ItemReviewsDto.getParentId());
+            ItemReview.setParentId(ItemReviewsDto.getParentId());
+            ItemReview.setUser(loggedUser);
+            ItemReview.setCreatedAt(Utils.getCurrentMillis());
+            ItemReview.setUpdatedAt(Utils.getCurrentMillis());
+            ItemReview = itemReviewRepository.save(ItemReview);
+            if (ItemReview.getId() > 0) {
+                responseObj.put("res",ItemReview);
                 responseObj.put("message", "Comment successfully saved.");
                 responseObj.put("status", 200);
-                logger.info("Comment with ID {} saved successfully.", itemComment.getId());
+                logger.info("Comment with ID {} saved successfully.", ItemReview.getId());
                 return responseObj;
             }
         }
         responseObj.put("message", "Facing some problem to save your comment.");
         responseObj.put("status", 400);
-        logger.error("Error saving comment: {}", itemCommentsDto);
+        logger.error("Error saving comment: {}", ItemReviewsDto);
         return responseObj;
     }
 
-    public Map<String,Object> addLikeComment(Long itemCommentId, Integer userId) {
-        logger.info("Received request to like comment with ID: {}", itemCommentId);
+    public Map<String,Object> addLikeReview(Long itemReviewId, Integer userId) {
+        logger.info("Received request to like review with ID: {}", itemReviewId);
         Map<String,Object> responseObj = new HashMap<>();
         int isLiked = 0;
         /* if user disliked then remove this dislikes also */
-        Boolean alreadyDisliked = itemCommentHbRepository.isYouDisliked(itemCommentId, userId);
+        Boolean alreadyDisliked = itemReviewHbRepository.isYouDisliked(itemReviewId, userId);
         if (alreadyDisliked) {
-            int removed = itemCommentHbRepository.removeDislike(itemCommentId, userId);
+            int removed = itemReviewHbRepository.removeDislike(itemReviewId, userId);
             if (removed > 0) {
                 responseObj.put("dislikes", -1);
             }
         }
-        Boolean alreadyLiked = itemCommentHbRepository.isYouLiked(itemCommentId, userId);
+        Boolean alreadyLiked = itemReviewHbRepository.isYouLiked(itemReviewId, userId);
         if (alreadyLiked) {
-            int removed = itemCommentHbRepository.removeLike(itemCommentId, userId);
+            int removed = itemReviewHbRepository.removeLike(itemReviewId, userId);
             if (removed > 0) {
                 isLiked = -1;
             }
         } else {
-            int liked = itemCommentHbRepository.likeComment(itemCommentId, userId);
+            int liked = itemReviewHbRepository.likeComment(itemReviewId, userId);
             if (liked > 0) {
                 isLiked = 1;
             }
@@ -133,30 +133,30 @@ public class ItemCommentService extends CommonRepository {
         responseObj.put("isDisliked", false);
         responseObj.put("message", "Successfully updated");
         responseObj.put("status", 200);
-        logger.info("Comment with ID {} liked status updated.", itemCommentId);
+        logger.info("Comment with ID {} liked status updated.", itemReviewId);
         return responseObj;
     }
 
-    public Map<String,Object> addDislikeComment(Long itemCommentId, Integer userId) {
-        logger.info("Received request to dislike comment with ID: {}", itemCommentId);
+    public Map<String,Object> addDislikeComment(Long itemReviewId, Integer userId) {
+        logger.info("Received request to dislike comment with ID: {}", itemReviewId);
         Map<String,Object> responseObj = new HashMap<>();
         int isDisliked = 0;
         /* if user liked then remove this like also */
-        Boolean alreadyLiked = itemCommentHbRepository.isYouLiked(itemCommentId, userId);
+        Boolean alreadyLiked = itemReviewHbRepository.isYouLiked(itemReviewId, userId);
         if (alreadyLiked) {
-            int removed = itemCommentHbRepository.removeLike(itemCommentId, userId);
+            int removed = itemReviewHbRepository.removeLike(itemReviewId, userId);
             if (removed > 0) {
                 responseObj.put("likes", -1);
             }
         }
-        Boolean alreadyDisliked = itemCommentHbRepository.isYouDisliked(itemCommentId, userId);
+        Boolean alreadyDisliked = itemReviewHbRepository.isYouDisliked(itemReviewId, userId);
         if (alreadyDisliked) {
-            int removed = itemCommentHbRepository.removeDislike(itemCommentId, userId);
+            int removed = itemReviewHbRepository.removeDislike(itemReviewId, userId);
             if (removed > 0) {
                 isDisliked = -1;
             }
         } else {
-            int disliked = itemCommentHbRepository.dislikeComment(itemCommentId, userId);
+            int disliked = itemReviewHbRepository.dislikeComment(itemReviewId, userId);
             if (disliked > 0) {
                 isDisliked = 1;
             }
@@ -166,7 +166,7 @@ public class ItemCommentService extends CommonRepository {
         responseObj.put("isLiked", false);
         responseObj.put("message", "Successfully updated");
         responseObj.put("status", 200);
-        logger.info("Comment with ID {} disliked status updated.", itemCommentId);
+        logger.info("Comment with ID {} disliked status updated.", itemReviewId);
         return responseObj;
     }
 
@@ -186,7 +186,7 @@ public class ItemCommentService extends CommonRepository {
 
     public int deleteCommentBySlug(String slug, User loggedUser) {
         logger.info("Received request to delete comment with slug: {}", slug);
-        int deleted = itemCommentHbRepository.deleteComment(slug, loggedUser);
+        int deleted = itemReviewHbRepository.deleteComment(slug, loggedUser);
         logger.info("Comment with slug {} deleted by user ID {}.", slug, loggedUser.getId());
         return deleted;
     }

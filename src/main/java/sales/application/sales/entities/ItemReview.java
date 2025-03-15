@@ -6,8 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.Where;
-import sales.application.sales.dto.ItemCommentsDto;
+import sales.application.sales.dto.ItemReviewsDto;
 import sales.application.sales.utilities.Utils;
 
 import java.util.UUID;
@@ -17,15 +18,18 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "item_comments")
-@Where(clause = " is_deleted != 'Y'")
-public class ItemComment {
+@Table(name = "item_reviews")
+@SQLRestriction(" is_deleted != 'Y'")
+public class ItemReview {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
     @Column(name = "item_id",nullable = false)
     Integer itemId;
+
+    @Column(name = "rating")
+    Float rating;
 
     @Column(name = "slug",nullable = false)
     String slug = UUID.randomUUID().toString();

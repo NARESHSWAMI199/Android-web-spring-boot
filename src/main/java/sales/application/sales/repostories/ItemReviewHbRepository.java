@@ -10,10 +10,10 @@ import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sales.application.sales.dto.ItemCommentsDto;
+import sales.application.sales.dto.ItemReviewsDto;
 import sales.application.sales.entities.CommentDislikes;
 import sales.application.sales.entities.CommentLikes;
-import sales.application.sales.entities.ItemComment;
+import sales.application.sales.entities.ItemReview;
 import sales.application.sales.entities.User;
 import sales.application.sales.utilities.Utils;
 
@@ -21,22 +21,22 @@ import java.util.List;
 
 @Component
 @Transactional
-public class ItemCommentHbRepository {
+public class ItemReviewHbRepository {
 
     @Autowired
     EntityManager entityManager;
 
 
-    public int updateComment(ItemCommentsDto itemCommentsDto){
-        String hql = "update ItemComment set message=:message , updatedAt =:updatedAt where slug=:slug";
+    public int updateComment(ItemReviewsDto ItemReviewsDto){
+        String hql = "update ItemReview set message=:message , updatedAt =:updatedAt where slug=:slug";
         Query query = entityManager.createQuery(hql);
-        query.setParameter("message", itemCommentsDto.getMessage());
+        query.setParameter("message", ItemReviewsDto.getMessage());
         query.setParameter("updatedAt" , Utils.getCurrentMillis());
-        query.setParameter("slug", itemCommentsDto.getCommentSlug());
+        query.setParameter("slug", ItemReviewsDto.getCommentSlug());
         return query.executeUpdate();
     }
 
-    public Boolean isYouLiked(Long itemCommentId, Integer userId) {
+    public Boolean isYouLiked(Long ItemReviewId, Integer userId) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
         Root<CommentLikes> root = cq.from(CommentLikes.class);
@@ -45,7 +45,7 @@ public class ItemCommentHbRepository {
         cq.where(
                 cb.and(
                         cb.equal(root.get("userId"), userId),
-                        cb.equal(root.get("itemCommentId"), itemCommentId)
+                        cb.equal(root.get("ItemReviewId"), ItemReviewId)
                 )
         );
         TypedQuery<Long> query = entityManager.createQuery(cq);
@@ -54,7 +54,7 @@ public class ItemCommentHbRepository {
     }
 
 
-    public Boolean isYouDisliked(Long itemCommentId, Integer userId) {
+    public Boolean isYouDisliked(Long ItemReviewId, Integer userId) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
         Root<CommentDislikes> root = cq.from(CommentDislikes.class);
@@ -63,7 +63,7 @@ public class ItemCommentHbRepository {
         cq.where(
                 cb.and(
                         cb.equal(root.get("userId"), userId),
-                        cb.equal(root.get("itemCommentId"), itemCommentId)
+                        cb.equal(root.get("ItemReviewId"), ItemReviewId)
                 )
         );
         TypedQuery<Long> query = entityManager.createQuery(cq);
@@ -73,14 +73,14 @@ public class ItemCommentHbRepository {
 
 
     public void increaseCommentLikes(Long commentId) {
-        String hql = "update ItemComment set likes =likes+1 where id=:commentId";
+        String hql = "update ItemReview set likes =likes+1 where id=:commentId";
         Query query = entityManager.createQuery(hql);
         query.setParameter("commentId",commentId);
         query.executeUpdate();
     }
 
     public void decreaseCommentLikes(Long commentId) {
-        String hql = "update ItemComment set likes=likes-1 where id=:commentId";
+        String hql = "update ItemReview set likes=likes-1 where id=:commentId";
         Query query = entityManager.createQuery(hql);
         query.setParameter("commentId",commentId);
         query.executeUpdate();
@@ -88,26 +88,26 @@ public class ItemCommentHbRepository {
 
 
 
-    public int likeComment(Long itemCommentId, Integer userId){
-        String hql = "insert into CommentLikes (`userId`,`itemCommentId`)  values( :userId , :itemCommentId )";
+    public int likeComment(Long ItemReviewId, Integer userId){
+        String hql = "insert into CommentLikes (`userId`,`ItemReviewId`)  values( :userId , :ItemReviewId )";
         Query query = entityManager.createQuery(hql);
         query.setParameter("userId", userId);
-        query.setParameter("itemCommentId", itemCommentId);
+        query.setParameter("ItemReviewId", ItemReviewId);
         int isUpdated =   query.executeUpdate();
         if(isUpdated > 0) {
-            increaseCommentLikes(itemCommentId);
+            increaseCommentLikes(ItemReviewId);
         }
         return isUpdated;
     }
 
-    public int removeLike(Long itemCommentId , Integer userId) {
-        String hql = "delete from CommentLikes where userId=:userId and itemCommentId=:itemCommentId";
+    public int removeLike(Long ItemReviewId , Integer userId) {
+        String hql = "delete from CommentLikes where userId=:userId and ItemReviewId=:ItemReviewId";
         Query query = entityManager.createQuery(hql);
         query.setParameter("userId",userId)
-                .setParameter("itemCommentId",itemCommentId);
+                .setParameter("ItemReviewId",ItemReviewId);
         int update = query.executeUpdate();
         if(update > 0) {
-            decreaseCommentLikes(itemCommentId);
+            decreaseCommentLikes(ItemReviewId);
         }
         return  update;
     }
@@ -115,47 +115,47 @@ public class ItemCommentHbRepository {
 
 
     public void increaseCommentDislikes(Long commentId) {
-        String hql = "update ItemComment set dislikes=dislikes+1 where id=:commentId";
+        String hql = "update ItemReview set dislikes=dislikes+1 where id=:commentId";
         Query query = entityManager.createQuery(hql);
         query.setParameter("commentId",commentId);
         query.executeUpdate();
     }
 
     public void decreaseCommentDislikes(Long commentId) {
-        String hql = "update ItemComment set dislikes=dislikes-1 where id=:commentId";
+        String hql = "update ItemReview set dislikes=dislikes-1 where id=:commentId";
         Query query = entityManager.createQuery(hql);
         query.setParameter("commentId",commentId);
         query.executeUpdate();
     }
 
 
-    public int dislikeComment(Long itemCommentId, Integer userId){
-        String hql = "insert into CommentDislikes (`userId`,`itemCommentId`)  values( :userId , :itemCommentId )";
+    public int dislikeComment(Long ItemReviewId, Integer userId){
+        String hql = "insert into CommentDislikes (`userId`,`ItemReviewId`)  values( :userId , :ItemReviewId )";
         Query query = entityManager.createQuery(hql);
         query.setParameter("userId", userId);
-        query.setParameter("itemCommentId", itemCommentId);
+        query.setParameter("ItemReviewId", ItemReviewId);
         int isUpdated =  query.executeUpdate();
         if(isUpdated > 0) {
-            increaseCommentDislikes(itemCommentId);
+            increaseCommentDislikes(ItemReviewId);
         }
         return isUpdated;
     }
 
-    public int removeDislike(Long itemCommentId , Integer userId) {
-        String hql = "delete from CommentDislikes where userId=:userId and itemCommentId=:itemCommentId";
+    public int removeDislike(Long ItemReviewId , Integer userId) {
+        String hql = "delete from CommentDislikes where userId=:userId and ItemReviewId=:ItemReviewId";
         Query query = entityManager.createQuery(hql);
         query.setParameter("userId",userId)
-                .setParameter("itemCommentId",itemCommentId);
+                .setParameter("ItemReviewId",ItemReviewId);
         int update = query.executeUpdate();
         if(update > 0) {
-            decreaseCommentDislikes(itemCommentId);
+            decreaseCommentDislikes(ItemReviewId);
         }
         return  update;
     }
 
 
     public int deleteComment(String slug, User loggedUser){
-        String hql = "update ItemComment set isDeleted='Y', updatedAt=:updatedAt where slug=:slug and user=:user";
+        String hql = "update ItemReview set isDeleted='Y', updatedAt=:updatedAt where slug=:slug and user=:user";
         Query query = entityManager.createQuery(hql);
         query.setParameter("updatedAt",Utils.getCurrentMillis());
         query.setParameter("slug",slug);

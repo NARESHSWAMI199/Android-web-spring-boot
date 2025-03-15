@@ -45,8 +45,8 @@ public class SalesWebMvcConfigurer implements WebMvcConfigurer {
                 "/api-docs/**",
                 "/auth/login",
                 "/auth/register",
-                "/comments/all",
-                "/comments/detail/**",
+                "/review/all",
+                "/review/detail/**",
                 "/auth/profile/**",
                 "/paytm/**"
         };
