@@ -22,7 +22,7 @@ public class ItemReviewSpecification {
         };
     }
 
-    public static Specification<ItemReview> isParentComment(int parentId) {
+    public static Specification<ItemReview> isParentReview(int parentId) {
         return (root, query, criteriaBuilder) -> {
             return criteriaBuilder.equal(root.get(ItemReview_.PARENT_ID), parentId);
         };

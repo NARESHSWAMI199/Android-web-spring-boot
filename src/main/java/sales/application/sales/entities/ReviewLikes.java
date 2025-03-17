@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentLikes {
+public class ReviewLikes {
 
     @Id
             @GeneratedValue(strategy = GenerationType.IDENTITY)

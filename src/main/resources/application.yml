@@ -14,11 +14,11 @@ spring:
     password : password
     driver-class-name : com.mysql.cj.jdbc.Driver
   jpa:
-    show-sql : true
+    show-sql: false
     database-platform : org.hibernate.dialect.MySQLDialect
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
 #  /** lazy join */
   jackson:
     serialization:
@@ -59,6 +59,7 @@ management:
 #
 #
 #    spring.servlet.multipart.max-file-size=1000MB   management.endpoints.web.base-path =  /actuator
+#    management.endpoints.web.exposure.include =  health,info,prometheus,metrics
 #    management.endpoint.health.show-details =  always
 #    management.endpoint.metrics.enabled =  true
 #    management.endpoint.prometheus.enabled =  true
@@ -71,28 +72,25 @@ jwt:
   secret : saleispower
 
 
+
+
+public_folder :
+  absolute  : /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/public
+  get : src/main/resources/public
+
 profile :
-  #  absolute : /home/rohit/Documents/images/profiles/
-  absolute : C:/Users/DATA/Documents/demo/sales-backend/src/main/resources/public/profiles/
-  #  absolute  : /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/images/profiles/
-  #  get :  /home/rohit/Documents/images/profiles/
-  get : src/main/resources/public/profiles/
+  absolute  : ${public_folder.absolute}/profiles/
+  get :  ${public_folder.get}/profiles/
 
 store :
-  #  absolute : /home/rohit/Documents/images/stores/
-  absolute : C:/Users/DATA/Documents/demo/sales-backend/src/main/resources/public/stores/
-  #  absolute  : /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/images/stores/
+  absolute  : ${public_folder.absolute}/stores/
   get : src/main/resources/public/stores/
-#  get : /home/rohit/Documents/images/stores/
 
 item:
-  #  absolute : /home/rohit/Documents/images/items/
-  #  absolute: /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/images/items/
-  absolute  : C:/Users/DATA/Documents/demo/sales-backend/src/main/resources/public/items/
-  #  get : /home/rohit/Documents/images/items/
-  get: src/main/resources/public/items/
+  absolute:  ${public_folder.absolute}/items/
+  get: ${public_folder.get}/items/
 
 
 slips :
-  absolute : C:/Users/DATA/Documents/demo/android-backend/Android-web-spring-boot/src/main/resources/slips/
-  get : src/main/resources/slips/
+  absolute : ${public_folder.absolute}/slips/
+  get : ${public_folder.get}/slips/

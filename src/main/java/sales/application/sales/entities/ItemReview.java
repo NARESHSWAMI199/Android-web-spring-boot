@@ -26,7 +26,7 @@ public class ItemReview {
     long id;
 
     @Column(name = "item_id",nullable = false)
-    Integer itemId;
+    Long itemId;
 
     @Column(name = "rating")
     Float rating;
@@ -34,9 +34,8 @@ public class ItemReview {
     @Column(name = "slug",nullable = false)
     String slug = UUID.randomUUID().toString();
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    User user;
+    @Column(name = "user_id")
+    Integer userId;
 
     @Column(name = "likes")
     Long likes=0L;

@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import sales.application.sales.dto.ItemReviewsDto;
+import sales.application.sales.dto.ReviewListDto;
 import sales.application.sales.entities.Item;
 import sales.application.sales.entities.ItemReview;
 import sales.application.sales.entities.User;
@@ -36,30 +37,25 @@ public class ItemReviewService extends CommonRepository {
     @Autowired
     JwtToken jwtToken;
 
-    public Page<ItemReview> getAllItemReview(ItemReviewsDto filters, User loggedUser) {
-        logger.info("Received request to get all item comments with filters: {}", filters);
+    public Page<ReviewListDto> getAllItemReview(ItemReviewsDto filters, User loggedUser) {
+        logger.info("Received request to get all item reviews with filters: {}", filters);
         Map<String,Object> map = new HashMap<>();
-        Specification<ItemReview> specification = Specification.where(
-                (containsName(filters.getSearchKey()))
-                        .and(hasSlug(filters.getCommentSlug()))
-                        .and(isItemId(filters.getItemId()))
-                        .and(isParentComment(filters.getParentId()))
-        );
         Pageable pageable = getPageable(filters);
-        Page<ItemReview> ItemReviews = itemReviewRepository.findAll(specification, pageable);
-        List<ItemReview> content = ItemReviews.getContent();
-        for (ItemReview comment : content) {
-            comment.setRepliesCount(itemReviewRepository.totalReplies(comment.getId()));
+        Page<ReviewListDto> ItemReviews = itemReviewRepository.getAllReviewByItemId(filters.getItemId(),pageable);
+        List<ReviewListDto> content = ItemReviews.getContent();
+        for (ReviewListDto reviewListDto : content) {
+            ItemReview review = reviewListDto.getItemReview();
+            review.setRepliesCount(itemReviewRepository.totalReplies(review.getId()));
             if (loggedUser != null) {
-                comment.setIsLiked(itemReviewHbRepository.isYouLiked(comment.getId(), loggedUser.getId()));
-                comment.setIsDisliked(itemReviewHbRepository.isYouDisliked(comment.getId(), loggedUser.getId()));
+                review.setIsLiked(itemReviewHbRepository.isYouLiked(review.getId(), loggedUser.getId()));
+                review.setIsDisliked(itemReviewHbRepository.isYouDisliked(review.getId(), loggedUser.getId()));
             }
         }
         return new PageImpl<>(content,pageable,ItemReviews.getTotalElements());
     }
 
     public ItemReview findItemReviewBySlug(String slug, User loggedUser) {
-        logger.info("Received request to find item comment by slug: {}", slug);
+        logger.info("Received request to find item review by slug: {}", slug);
         ItemReview ItemReview = itemReviewRepository.findItemReviewBySlug(slug);
         if (loggedUser != null) {
             ItemReview.setIsLiked(itemReviewHbRepository.isYouLiked(ItemReview.getId(), loggedUser.getId()));
@@ -69,40 +65,34 @@ public class ItemReviewService extends CommonRepository {
     }
 
     @Transactional
-    public Map<String,Object> addOrUpdateComment(ItemReviewsDto ItemReviewsDto, User loggedUser) {
-        logger.info("Received request to add/update comment: {}", ItemReviewsDto);
+    public Map<String,Object> addOrUpdateReview(ItemReviewsDto itemReviewsDto, User loggedUser) {
+        logger.info("Received request to add/update review: {}", itemReviewsDto);
         Map<String,Object> responseObj = new HashMap<>();
-        if (!Utils.isEmpty(ItemReviewsDto.getCommentSlug())) {
-            int isUpdated = itemReviewHbRepository.updateComment(ItemReviewsDto);
+            int isUpdated = itemReviewHbRepository.updateReview(itemReviewsDto,loggedUser);
             if (isUpdated > 0) {
-                responseObj.put("message", "Comment successfully updated.");
+                responseObj.put("message", "Review successfully updated.");
                 responseObj.put("status", 201);
-                logger.info("Comment with slug {} updated successfully.", ItemReviewsDto.getCommentSlug());
+                logger.info("Review with slug {} updated successfully.", itemReviewsDto.getReviewSlug());
                 return responseObj;
             }
-        } else {
-            ItemReview ItemReview = new ItemReview();
-            ItemReview.setItemId(ItemReviewsDto.getItemId());
-            ItemReview.setMessage(ItemReviewsDto.getMessage());
-            ItemReview.setParentId(ItemReviewsDto.getParentId());
-            ItemReview.setParentId(ItemReviewsDto.getParentId());
-            ItemReview.setUser(loggedUser);
-            ItemReview.setCreatedAt(Utils.getCurrentMillis());
-            ItemReview.setUpdatedAt(Utils.getCurrentMillis());
-            ItemReview = itemReviewRepository.save(ItemReview);
-            if (ItemReview.getId() > 0) {
-                responseObj.put("res",ItemReview);
-                responseObj.put("message", "Comment successfully saved.");
-                responseObj.put("status", 200);
-                logger.info("Comment with ID {} saved successfully.", ItemReview.getId());
-                return responseObj;
-            }
-        }
-        responseObj.put("message", "Facing some problem to save your comment.");
-        responseObj.put("status", 400);
-        logger.error("Error saving comment: {}", ItemReviewsDto);
-        return responseObj;
-    }
+
+            // else we're going to add this review
+            ItemReview itemReview = new ItemReview();
+            itemReview.setItemId(itemReviewsDto.getItemId());
+            itemReview.setMessage(itemReviewsDto.getMessage());
+            itemReview.setParentId(itemReviewsDto.getParentId());
+            itemReview.setParentId(itemReviewsDto.getParentId());
+            itemReview.setUserId(loggedUser.getId());
+            itemReview.setCreatedAt(Utils.getCurrentMillis());
+            itemReview.setUpdatedAt(Utils.getCurrentMillis());
+            itemReview.setRating(itemReviewsDto.getRating());
+            itemReview = itemReviewRepository.save(itemReview);
+            responseObj.put("res",itemReview);
+            responseObj.put("message", "Review successfully saved.");
+            responseObj.put("status", 200);
+            logger.info("Review with ID {} saved successfully.", itemReview.getId());
+            return responseObj;
+}
 
     public Map<String,Object> addLikeReview(Long itemReviewId, Integer userId) {
         logger.info("Received request to like review with ID: {}", itemReviewId);
@@ -123,7 +113,7 @@ public class ItemReviewService extends CommonRepository {
                 isLiked = -1;
             }
         } else {
-            int liked = itemReviewHbRepository.likeComment(itemReviewId, userId);
+            int liked = itemReviewHbRepository.likeReview(itemReviewId, userId);
             if (liked > 0) {
                 isLiked = 1;
             }
@@ -133,12 +123,12 @@ public class ItemReviewService extends CommonRepository {
         responseObj.put("isDisliked", false);
         responseObj.put("message", "Successfully updated");
         responseObj.put("status", 200);
-        logger.info("Comment with ID {} liked status updated.", itemReviewId);
+        logger.info("Review with ID {} liked status updated.", itemReviewId);
         return responseObj;
     }
 
-    public Map<String,Object> addDislikeComment(Long itemReviewId, Integer userId) {
-        logger.info("Received request to dislike comment with ID: {}", itemReviewId);
+    public Map<String,Object> addDislikeReview(Long itemReviewId, Integer userId) {
+        logger.info("Received request to dislike review with ID: {}", itemReviewId);
         Map<String,Object> responseObj = new HashMap<>();
         int isDisliked = 0;
         /* if user liked then remove this like also */
@@ -156,7 +146,7 @@ public class ItemReviewService extends CommonRepository {
                 isDisliked = -1;
             }
         } else {
-            int disliked = itemReviewHbRepository.dislikeComment(itemReviewId, userId);
+            int disliked = itemReviewHbRepository.dislikeReview(itemReviewId, userId);
             if (disliked > 0) {
                 isDisliked = 1;
             }
@@ -166,7 +156,7 @@ public class ItemReviewService extends CommonRepository {
         responseObj.put("isLiked", false);
         responseObj.put("message", "Successfully updated");
         responseObj.put("status", 200);
-        logger.info("Comment with ID {} disliked status updated.", itemReviewId);
+        logger.info("Review with ID {} disliked status updated.", itemReviewId);
         return responseObj;
     }
 
@@ -184,10 +174,10 @@ public class ItemReviewService extends CommonRepository {
         return null;
     }
 
-    public int deleteCommentBySlug(String slug, User loggedUser) {
-        logger.info("Received request to delete comment with slug: {}", slug);
-        int deleted = itemReviewHbRepository.deleteComment(slug, loggedUser);
-        logger.info("Comment with slug {} deleted by user ID {}.", slug, loggedUser.getId());
+    public int deleteReviewBySlug(String slug, User loggedUser) {
+        logger.info("Received request to delete review with slug: {}", slug);
+        int deleted = itemReviewHbRepository.deleteReview(slug, loggedUser);
+        logger.info("Review with slug {} deleted by user ID {}.", slug, loggedUser.getId());
         return deleted;
     }
 }

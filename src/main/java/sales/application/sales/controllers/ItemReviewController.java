@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import sales.application.sales.dto.ItemReviewsDto;
+import sales.application.sales.dto.ReviewListDto;
 import sales.application.sales.entities.ItemReview;
 import sales.application.sales.entities.User;
 import org.slf4j.Logger;
@@ -29,27 +30,27 @@ public class ItemReviewController extends CommonService {
     private static final Logger logger = LoggerFactory.getLogger(ItemReviewController.class);
 
     @PostMapping("all")
-    public ResponseEntity<Page<ItemReview>> getAllUsers(@RequestBody ItemReviewsDto ItemReviewsFilterDto, HttpServletRequest request) {
-        logger.info("Received request to get all comments with filters: {}", ItemReviewsFilterDto);
+    public ResponseEntity<Page<ReviewListDto>> getAllUsers(@RequestBody ItemReviewsDto itemReviewsFilterDto, HttpServletRequest request) {
+        logger.info("Received request to get all reviews with filters: {}", itemReviewsFilterDto);
         User loggedUser = null;
         try {
             loggedUser = itemReviewService.getUserByRequest(request);
         }catch (ExpiredJwtException ex){
-            logger.info("session expired.");
+            logger.info("session expired during getting all reviews for  : {} .",itemReviewsFilterDto.getItemId());
         }
-        Page<ItemReview> comments =  itemReviewService.getAllItemReview(ItemReviewsFilterDto,loggedUser);
-        return new ResponseEntity<>(comments, HttpStatus.OK);
+        Page<ReviewListDto> reviews =  itemReviewService.getAllItemReview(itemReviewsFilterDto,loggedUser);
+        return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
 
     @GetMapping("detail/{slug}")
-    public ResponseEntity<ItemReview> getDetailComment(@PathVariable String slug,HttpServletRequest request) {
-        logger.info("Received request to get comment detail for slug: {}", slug);
+    public ResponseEntity<ItemReview> getDetailReview(@PathVariable String slug,HttpServletRequest request) {
+        logger.info("Received request to get review detail for slug: {}", slug);
         User loggedUser = null;
         try{
           loggedUser  = itemReviewService.getUserByRequest(request);
         }catch (ExpiredJwtException ex){
-            logger.info("session expired.");
+            logger.info("session expired during getting review detail by slug.");
         }
         ItemReview ItemReview =  itemReviewService.findItemReviewBySlug(slug,loggedUser);
         return new ResponseEntity<>(ItemReview, HttpStatus.OK);
@@ -57,16 +58,16 @@ public class ItemReviewController extends CommonService {
 
 
     @PostMapping(value = {"add", "update"})
-    public ResponseEntity<Map<String,Object>> updateOrSaveItem(@RequestBody ItemReviewsDto ItemReviewsDto, HttpServletRequest request) {
-        logger.info("Received request to add/update comment: {}", ItemReviewsDto);
+    public ResponseEntity<Map<String,Object>> updateOrSaveItem(@RequestBody ItemReviewsDto itemReviewsDto, HttpServletRequest request) {
+        logger.info("Received request to add/update review: {}", itemReviewsDto);
         User loggedUser = (User) request.getAttribute("user");
-        Map<String,Object> responseObj = itemReviewService.addOrUpdateComment(ItemReviewsDto,loggedUser);
-        logger.info("Comment {} successfully.", ItemReviewsDto.getCommentSlug() == null ? "added" : "updated");
+        Map<String,Object> responseObj = itemReviewService.addOrUpdateReview(itemReviewsDto,loggedUser);
+        logger.info("Review {} successfully.", itemReviewsDto.getReviewSlug() == null ? "added" : "updated");
         return new ResponseEntity<>(responseObj,HttpStatus.valueOf((Integer) responseObj.get("status")));
     }
 
     @GetMapping("like/{reviewId}")
-    public synchronized ResponseEntity<Map<String,Object>> addCommentLike(HttpServletRequest request , @PathVariable("reviewId") Long reviewId){
+    public synchronized ResponseEntity<Map<String,Object>> addReviewLike(HttpServletRequest request , @PathVariable("reviewId") Long reviewId){
         logger.info("Received request to like review with ID: {}", reviewId);
         User loggedUser = (User) request.getAttribute("user");
         Map<String,Object> responseObj = itemReviewService.addLikeReview(reviewId, loggedUser.getId());
@@ -74,28 +75,28 @@ public class ItemReviewController extends CommonService {
     }
 
 
-    @GetMapping("dislike/{commentId}")
-    public synchronized ResponseEntity<Map<String,Object>> addCommentDislike(HttpServletRequest request , @PathVariable("commentId") Long commentId){
-        logger.info("Received request to dislike comment with ID: {}", commentId);
+    @GetMapping("dislike/{reviewId}")
+    public synchronized ResponseEntity<Map<String,Object>> addReviewDislike(HttpServletRequest request , @PathVariable("reviewId") Long reviewId){
+        logger.info("Received request to dislike review with ID: {}", reviewId);
         User loggedUser = (User) request.getAttribute("user");
-        Map<String,Object> responseObj = itemReviewService.addDislikeComment(commentId, loggedUser.getId());
+        Map<String,Object> responseObj = itemReviewService.addDislikeReview(reviewId, loggedUser.getId());
         return new ResponseEntity<>(responseObj,HttpStatus.valueOf((Integer) responseObj.get("status")));
     }
 
-    @PostMapping("delete/{commentSlug}")
-    public ResponseEntity<Map<String,Object>> deleteCommentBySlug(HttpServletRequest request , @PathVariable("commentSlug") String commentSlug){
-        logger.info("Received request to delete comment with slug: {}", commentSlug);
+    @PostMapping("delete/{reviewSlug}")
+    public ResponseEntity<Map<String,Object>> deleteReviewBySlug(HttpServletRequest request , @PathVariable("reviewSlug") String reviewSlug){
+        logger.info("Received request to delete review with slug: {}", reviewSlug);
         User loggedUser = (User) request.getAttribute("user");
         Map<String,Object> responseObj = new HashMap<>();
-        int deleted = itemReviewService.deleteCommentBySlug(commentSlug, loggedUser);
+        int deleted = itemReviewService.deleteReviewBySlug(reviewSlug, loggedUser);
         if(deleted > 0){
             responseObj.put("message","Message deleted successfully.");
             responseObj.put("status",200);
-            logger.info("Comment with slug {} deleted successfully.", commentSlug);
+            logger.info("Review with slug {} deleted successfully.", reviewSlug);
         }else {
             responseObj.put("message","No record found.");
             responseObj.put("status",404);
-            logger.info("No record found for comment with slug {}.", commentSlug);
+            logger.info("No record found for review with slug {}.", reviewSlug);
         }
         return new ResponseEntity<>(responseObj,HttpStatus.valueOf((Integer) responseObj.get("status")));
     }

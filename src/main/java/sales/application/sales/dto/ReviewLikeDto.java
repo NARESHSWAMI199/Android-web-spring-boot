@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CommentLikeDto {
+public class ReviewLikeDto {
 
     Long commentId;
     Integer userId;

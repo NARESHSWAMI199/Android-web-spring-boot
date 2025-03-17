@@ -8,9 +8,10 @@ import lombok.Setter;
 public class ItemReviewsDto extends SearchFilters{
     String message;
     Integer userId;
+    Float rating;
     String userSlug;
     String itemSlug;
-    String commentSlug;
-    int itemId;
+    String reviewSlug;
+    long itemId;
     int parentId = 0;
 }
