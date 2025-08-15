@@ -8,10 +8,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @SpringBootApplication
 //@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, DataSourceTransactionManagerAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
-public class SalesApplication {
+public class SalesClientApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SalesApplication.class, args);
+		SpringApplication.run(SalesClientApplication.class, args);
 	}
 
 }
