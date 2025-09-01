@@ -41,9 +41,9 @@ public class ItemController extends CommonService {
     private static final Logger logger = LoggerFactory.getLogger(ItemController.class);
 
     @PostMapping("/all")
-    public ResponseEntity<Page<Item>> getAllItems(@RequestBody ItemDto searchFilters) {
+    public ResponseEntity<Page<Item>> getAllItems(HttpServletRequest request,@RequestBody ItemDto searchFilters) {
         logger.info("Received request to get all items with filters: {}", searchFilters);
-        Page<Item> items = itemService.getAllItem(searchFilters);
+        Page<Item> items = itemService.getAllItem(searchFilters,request);
         return new ResponseEntity<>(items, HttpStatus.valueOf(200));
     }
 

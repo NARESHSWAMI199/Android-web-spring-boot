@@ -11,6 +11,7 @@ import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.Where;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.hibernate.annotations.SQLRestriction;
 
@@ -92,4 +93,6 @@ public class Item implements Serializable {
     @Transient
     Store store;
 
+    @Transient
+    List<String> images;
 }

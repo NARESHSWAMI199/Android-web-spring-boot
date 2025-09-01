@@ -1,7 +1,7 @@
 package sales.application.sales.services;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.transaction.Transactional;
+import jakarta.transaction.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.embedded.jetty.JettyWebServer;
 import org.springframework.data.domain.Page;
@@ -11,6 +11,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import sales.application.sales.dto.ItemReviewsDto;
 import sales.application.sales.dto.ReviewListDto;
 import sales.application.sales.entities.Item;
@@ -77,16 +80,8 @@ public class ItemReviewService extends CommonRepository {
             }
 
             // else we're going to add this review
-            ItemReview itemReview = new ItemReview();
-            itemReview.setItemId(itemReviewsDto.getItemId());
-            itemReview.setMessage(itemReviewsDto.getMessage());
-            itemReview.setParentId(itemReviewsDto.getParentId());
-            itemReview.setParentId(itemReviewsDto.getParentId());
-            itemReview.setUserId(loggedUser.getId());
-            itemReview.setCreatedAt(Utils.getCurrentMillis());
-            itemReview.setUpdatedAt(Utils.getCurrentMillis());
-            itemReview.setRating(itemReviewsDto.getRating());
-            itemReview = itemReviewRepository.save(itemReview);
+        ItemReview itemReview = getItemReview(itemReviewsDto, loggedUser);
+        itemReview = itemReviewRepository.save(itemReview);
             responseObj.put("res",itemReview);
             responseObj.put("message", "Review successfully saved.");
             responseObj.put("status", 200);
@@ -94,6 +89,21 @@ public class ItemReviewService extends CommonRepository {
             return responseObj;
 }
 
+    private static ItemReview getItemReview(ItemReviewsDto itemReviewsDto, User loggedUser) {
+        ItemReview itemReview = new ItemReview();
+        itemReview.setItemId(itemReviewsDto.getItemId());
+        itemReview.setMessage(itemReviewsDto.getMessage());
+        itemReview.setParentId(itemReviewsDto.getParentId());
+        itemReview.setParentId(itemReviewsDto.getParentId());
+        itemReview.setUserId(loggedUser.getId());
+        itemReview.setCreatedAt(Utils.getCurrentMillis());
+        itemReview.setUpdatedAt(Utils.getCurrentMillis());
+        itemReview.setRating(itemReviewsDto.getRating());
+        return itemReview;
+    }
+
+
+    @Transactional(isolation = Isolation.SERIALIZABLE,propagation= Propagation.REQUIRES_NEW)
     public Map<String,Object> addLikeReview(Long itemReviewId, Integer userId) {
         logger.info("Received request to like review with ID: {}", itemReviewId);
         Map<String,Object> responseObj = new HashMap<>();
@@ -127,6 +137,7 @@ public class ItemReviewService extends CommonRepository {
         return responseObj;
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE,propagation= Propagation.REQUIRES_NEW)
     public Map<String,Object> addDislikeReview(Long itemReviewId, Integer userId) {
         logger.info("Received request to dislike review with ID: {}", itemReviewId);
         Map<String,Object> responseObj = new HashMap<>();

@@ -8,12 +8,13 @@ import static sales.application.sales.specifications.ItemSpecifications.isSubcat
 import static sales.application.sales.specifications.ItemSpecifications.isSubcategoryName;
 import static sales.application.sales.specifications.ItemSpecifications.isWholesaleId;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import jakarta.transaction.Transactional;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import sales.application.sales.dto.ItemDto;
 import sales.application.sales.dto.RatingDto;
 import sales.application.sales.dto.SearchFilters;
@@ -29,6 +31,7 @@ import sales.application.sales.entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sales.application.sales.exceptions.NotFoundException;
+import sales.application.sales.utilities.Utils;
 
 @Service
 public class ItemService extends CommonRepository {
@@ -49,7 +52,8 @@ public class ItemService extends CommonRepository {
     }
 
 
-    public Page<Item> getAllItem(ItemDto searchFilters) {
+    @Transactional(readOnly = true)
+    public Page<Item> getAllItem(ItemDto searchFilters, HttpServletRequest request) {
         logger.info("Received request to get all items with filters: {}", searchFilters);
         System.err.println( "The zip code : " + searchFilters.getZipCode());
         Specification<Item> specification = Specification.where(
@@ -63,8 +67,21 @@ public class ItemService extends CommonRepository {
         Pageable pageable = getPageable(searchFilters);
         Page<Item> items = itemRepository.findAll(specification, pageable);
 
+        List<Item> itemList = new ArrayList<>(items.getContent());
+        logger.info("Adding the images paths for items.");
+        // Setting the images paths.
+        itemList = itemList.stream().peek(item -> {
+            String [] imagesNames = item.getAvatars().split(",");
+            List<String> imagesPaths = new ArrayList<>();
+            for(String imageName : imagesNames){
+                String path = Utils.getHostUrl(request) + "/images/" + item.getSlug() + "/" + imageName;
+                imagesPaths.add(path);
+            }
+            item.setImages(imagesPaths);
+        }).collect(Collectors.toList());
+        logger.info("Added the images paths for items.");
+
         if (searchFilters.getZipCode() != null && !searchFilters.getZipCode().isEmpty()) {
-            List<Item> itemList = new ArrayList<>(items.getContent());
             itemList.sort(Comparator.comparing(item -> {
                 Store store = storeRepository.findById(item.getWholesaleId()).orElse(null);
                 if (store != null && store.getAddress() != null) {

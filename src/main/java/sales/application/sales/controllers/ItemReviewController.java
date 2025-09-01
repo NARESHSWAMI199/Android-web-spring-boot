@@ -67,7 +67,7 @@ public class ItemReviewController extends CommonService {
     }
 
     @GetMapping("like/{reviewId}")
-    public synchronized ResponseEntity<Map<String,Object>> addReviewLike(HttpServletRequest request , @PathVariable("reviewId") Long reviewId){
+    public ResponseEntity<Map<String,Object>> addReviewLike(HttpServletRequest request , @PathVariable("reviewId") Long reviewId){
         logger.info("Received request to like review with ID: {}", reviewId);
         User loggedUser = (User) request.getAttribute("user");
         Map<String,Object> responseObj = itemReviewService.addLikeReview(reviewId, loggedUser.getId());
@@ -76,7 +76,7 @@ public class ItemReviewController extends CommonService {
 
 
     @GetMapping("dislike/{reviewId}")
-    public synchronized ResponseEntity<Map<String,Object>> addReviewDislike(HttpServletRequest request , @PathVariable("reviewId") Long reviewId){
+    public ResponseEntity<Map<String,Object>> addReviewDislike(HttpServletRequest request , @PathVariable("reviewId") Long reviewId){
         logger.info("Received request to dislike review with ID: {}", reviewId);
         User loggedUser = (User) request.getAttribute("user");
         Map<String,Object> responseObj = itemReviewService.addDislikeReview(reviewId, loggedUser.getId());
