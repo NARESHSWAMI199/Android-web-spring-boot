@@ -74,7 +74,7 @@ public class ItemService extends CommonRepository {
             String [] imagesNames = item.getAvatars().split(",");
             List<String> imagesPaths = new ArrayList<>();
             for(String imageName : imagesNames){
-                String path = Utils.getHostUrl(request) + "/images/" + item.getSlug() + "/" + imageName;
+                String path = Utils.getHostUrl(request) + "/item/image/" + item.getSlug() + "/" + imageName;
                 imagesPaths.add(path);
             }
             item.setImages(imagesPaths);

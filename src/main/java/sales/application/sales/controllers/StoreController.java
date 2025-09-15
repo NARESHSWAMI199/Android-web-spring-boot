@@ -33,9 +33,9 @@ public class StoreController extends CommonService {
     private static final Logger logger = LoggerFactory.getLogger(StoreController.class);
 
     @PostMapping("/all")
-    public ResponseEntity<Page<Store>> getAllStore(@RequestBody SearchFilters searchFilters) {
+    public ResponseEntity<Page<Store>> getAllStore(HttpServletRequest request, @RequestBody SearchFilters searchFilters) {
         logger.info("Received request to get all stores with filters: {}", searchFilters);
-        Page<Store> stores = storeService.getAllStore(searchFilters);
+        Page<Store> stores = storeService.getAllStore(searchFilters,request);
         return new ResponseEntity<>(stores, HttpStatus.valueOf(200));
     }
 

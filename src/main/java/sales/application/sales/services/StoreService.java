@@ -10,8 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Comparator;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
-import jakarta.transaction.Transactional;
+import jakarta.servlet.http.HttpServletRequest;
+import jdk.jshell.execution.Util;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import sales.application.sales.dto.RatingDto;
 import sales.application.sales.dto.SearchFilters;
 import sales.application.sales.entities.Store;
@@ -30,6 +33,7 @@ import sales.application.sales.specifications.StoreSpecifications;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sales.application.sales.utilities.Utils;
 
 
 @Service
@@ -51,7 +55,8 @@ public class StoreService extends CommonRepository {
 
 
     /** if you need more filters in future */
-    public Page<Store> getAllStore(SearchFilters filters) {
+    @Transactional(readOnly = true)
+    public Page<Store> getAllStore(SearchFilters filters, HttpServletRequest request) {
         logger.info("Received request to get all stores with filters: {}", filters);
         Specification<Store> specification = Specification.where(
                 (StoreSpecifications.containsName(filters.getSearchKey().trim())
@@ -64,8 +69,15 @@ public class StoreService extends CommonRepository {
         Pageable pageable = getPageable(filters);
         Page<Store> stores = storeRepository.findAll(specification, pageable);
 
+        // Setting the store's image
+        List<Store> storeList = new ArrayList<>(stores.getContent());
+        storeList = storeList.stream().peek(store -> {
+            String imagePath = Utils.getHostUrl(request) + "/store/image/"+ store.getSlug() + "/" + store.getAvatar();
+            store.setAvatar(imagePath);
+        }).collect(Collectors.toList());
+
         if (filters.getZipCode() != null && !filters.getZipCode().isEmpty()) {
-            List<Store> storeList = new ArrayList<>(stores.getContent());
+
             storeList.sort(Comparator.comparing(store -> {
                 if (store.getAddress() != null && store.getAddress().getZipCode() != null) {
                     return Math.abs(Integer.parseInt(store.getAddress().getZipCode()) - Integer.parseInt(filters.getZipCode()));
