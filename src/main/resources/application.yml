@@ -14,7 +14,7 @@ spring:
 #    password : password
 
     url: jdbc:mysql://db:3306/sales #docker
-    username: sales
+    username: root
     password: password
     driver-class-name : com.mysql.cj.jdbc.Driver
   jpa:
@@ -81,8 +81,8 @@ jwt:
 
 
 public_folder :
-  absolute  : /Users/nareshswami/Documents/springboot/ADMIN-PANEL-SWAMI-SALES-/src/main/resources/public
-  get : src/main/resources/public
+  absolute  : /Users/nareshswami/Documents/springboot/backend/sales-admin/src/main/resources/public
+  get : /Users/nareshswami/Documents/springboot/backend/sales-admin/src/main/resources/public
 
 profile :
   absolute  : ${public_folder.absolute}/profiles/
