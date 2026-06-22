@@ -2,20 +2,14 @@ package sales.application.sales.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.SQLRestriction;
-import org.hibernate.annotations.Where;
-import org.springframework.context.annotation.Lazy;
 @Entity
-@Table(name = "store")
+@Table(name = "stores")
 
 @Getter
 @Setter

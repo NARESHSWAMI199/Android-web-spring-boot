@@ -6,14 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.SQLRestriction;
-import org.hibernate.annotations.Where;
 
 import java.io.Serializable;
 import java.util.List;
-
-import org.hibernate.annotations.SQLRestriction;
 
 
 @Getter
@@ -22,7 +18,7 @@ import org.hibernate.annotations.SQLRestriction;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "item")
+@Table(name = "items")
 @SQLRestriction("is_deleted != 'Y' and  status !='D' ")
 public class Item implements Serializable {
     @Id
@@ -87,7 +83,7 @@ public class Item implements Serializable {
     @Column(name = "in_stock")
     String inStock;
 
-    @Column(name = "wholesale_id")
+    @Column(name = "store_id")
     Integer wholesaleId;
 
     @Transient

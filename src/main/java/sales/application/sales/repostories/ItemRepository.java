@@ -27,7 +27,7 @@ public interface ItemRepository extends JpaRepository<Item,Long> , JpaSpecificat
            s.slug as storeSlug,
            s.name as storeName,
            a.zip_code as zipCode
-    from item i 
+    from items i 
     inner join store s on s.id = i.wholesale_id and s.is_deleted != 'Y' 
     left join address a on a.id = s.address
     where i.is_deleted != 'Y' and i.status != 'D'

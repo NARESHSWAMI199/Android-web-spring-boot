@@ -32,7 +32,7 @@ public interface StoreRepository extends JpaRepository<Store,Integer>, JpaSpecif
                st.state_name as state,
                a.zip_code as zipCode,
                s.rating as rating
-        from store s 
+        from stores s 
         left join user u on u.user_id = s.user_id  
         left join address a on a.id = s.address 
         left join city c on c.id = a.city 

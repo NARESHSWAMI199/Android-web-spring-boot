@@ -12,7 +12,7 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "item_category")
+@Table(name = "item_categories")
 @Where(clause = "is_deleted != 'Y'")
 public class ItemCategory {
     @Id
