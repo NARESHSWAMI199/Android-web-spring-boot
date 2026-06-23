@@ -7,13 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Columns;
 import sales.application.sales.utilities.Utils;
 
 import java.util.UUID;
 
 
-@Table(name = "user")
+@Table(name = "users")
 @Entity
 @Getter
 @Setter

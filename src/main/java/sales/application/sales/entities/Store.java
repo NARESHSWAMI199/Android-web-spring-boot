@@ -30,22 +30,22 @@ public class Store {
     @Column(name = "name")
     String name;
 
-    @Column(name = "avtar")
+    @Column(name = "avatar")
     String avatar;
 
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category", referencedColumnName = "id")
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
     StoreCategory storeCategory;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "subcategory", referencedColumnName = "id")
+    @JoinColumn(name = "subcategory_id", referencedColumnName = "id")
     StoreSubCategory storeSubCategory;
 
 
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "address",nullable = true)
+    @JoinColumn(name = "address_id",nullable = true)
     Address address;
 
     @Column(name = "email")
@@ -54,7 +54,7 @@ public class Store {
     @Column(name = "phone")
     String phone;
 
-    @Column(name = "discription")
+    @Column(name = "description")
     String description;
 
     @Column(name = "rating")
